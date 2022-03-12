@@ -7,7 +7,8 @@ public enum DefaultTokenTypes implements TokenType {
     KEYWORD("KEYWORD"),
     IDENTIFIER("IDENTIFIER"),
     OPERATOR("OPERATOR"),
-    LITERAL("LITERAL");
+    LITERAL("LITERAL"),
+    SEPARATOR("SEPARATOR");
 
     private String type;
 

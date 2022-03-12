@@ -77,7 +77,17 @@ public class DefaultLexer implements Lexer {
         return Arrays.stream(Keyword.values()).map(keyword -> keyword.getKeyword()).toList().contains(currentString);
     }
 
-    private boolean isOperator(char currentChar) {
-        return Arrays.stream(Operator.values()).map(operator -> operator.getOperator()).toList().contains(currentChar);
+    private boolean isOperator(String currentString) {
+        return (currentString.length() == 1) && Arrays.stream(Operator.values()).map(operator -> operator.getOperator()).toList().contains(currentString.charAt(0));
+    }
+
+    private boolean isSeparator(String currentString) {
+        return (currentString.length() == 1) && Arrays.stream(Separator.values()).map(separator -> separator.getSeparator()).toList().contains(currentString.charAt(0));
+    }
+
+    private boolean isLiteral (String currentString){
+        if (currentString.charAt(0) == '"') return currentString.charAt(currentString.length()-1) == '"';
+        else if (currentString.charAt(0) == '\'') return currentString.charAt(currentString.length()-1) == '\'';
+        else return (currentString.matches("[0-9]{1,9}(\\.[0-9]*)?"));
     }
 }
