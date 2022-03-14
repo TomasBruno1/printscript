@@ -31,12 +31,12 @@ public class DefaultLexer implements Lexer {
                     col = col + nextQuoteMark + 1;
                     break;
                 }
-                if (!Character.isLetterOrDigit(currentChar) && currentChar != '.') break;
+                if (!Character.isLetterOrDigit(currentChar) && currentChar != '.' && currentChar != '_' ) break;
 
                 char nextChar;
                 if (i < length -1) {
                     nextChar = input.charAt(i + 1);
-                    if (Character.isLetterOrDigit(nextChar) || nextChar == '.') {
+                    if (Character.isLetterOrDigit(nextChar) || nextChar == '.' || nextChar == '_') {
                         currentString.append(nextChar);
                         currentChar = nextChar;
                         col++;
@@ -53,8 +53,7 @@ public class DefaultLexer implements Lexer {
             }
 
             if(!currentString.isEmpty() && currentString.charAt(0) > 32) {
-                Token token = tokenize(currentString.toString(), from, fromCol, col, row);
-                tokens.add(token);
+                tokens.add(tokenize(currentString.toString(), from, fromCol, col, row));
             }
         }
         return tokens;
@@ -69,8 +68,10 @@ public class DefaultLexer implements Lexer {
             return new Token(DefaultTokenTypes.KEYWORD, from, from + currentString.length(), new LexicalRange(fromCol, row, col, row));
         } else if (isLiteral(currentString)){
             return new Token(DefaultTokenTypes.LITERAL, from, from + currentString.length(), new LexicalRange(fromCol, row, col, row));
+        } else if (isIdentifier(currentString)){
+            return new Token(DefaultTokenTypes.IDENTIFIER, from, from + currentString.length(), new LexicalRange(fromCol, row, col, row));
         }
-        return null;
+        throw new IllegalArgumentException("Unknown token: " + currentString);
     }
 
     private boolean isKeyword(String currentString) {
@@ -89,5 +90,9 @@ public class DefaultLexer implements Lexer {
         if (currentString.charAt(0) == '"') return currentString.charAt(currentString.length()-1) == '"';
         else if (currentString.charAt(0) == '\'') return currentString.charAt(currentString.length()-1) == '\'';
         else return (currentString.matches("[0-9]{1,9}(\\.[0-9]*)?"));
+    }
+
+    private boolean isIdentifier (String currentString){
+        return (currentString.matches("[a-zA-Z_][a-zA-Z0-9_]*"));
     }
 }
