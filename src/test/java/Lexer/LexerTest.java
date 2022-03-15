@@ -41,12 +41,12 @@ class LexerTest {
         List<Token> tokens = List.of(
                 new Token(DefaultTokenTypes.KEYWORD, 0, 3, new LexicalRange(0, 0, 3, 0)),
                 new Token(DefaultTokenTypes.KEYWORD, 4, 11, new LexicalRange(4, 0, 11, 0)),
-                new Token(DefaultTokenTypes.KEYWORD, 13, 16, new LexicalRange(0, 1, 3, 1)),
-                new Token(DefaultTokenTypes.KEYWORD, 17, 20, new LexicalRange(4, 1, 7, 1)),
-                new Token(DefaultTokenTypes.KEYWORD, 21, 28, new LexicalRange(0, 2, 7, 2))
+                new Token(DefaultTokenTypes.KEYWORD, 13, 19, new LexicalRange(0, 1, 6, 1)),
+                new Token(DefaultTokenTypes.KEYWORD, 20, 26, new LexicalRange(7, 1, 13, 1)),
+                new Token(DefaultTokenTypes.KEYWORD, 27, 34, new LexicalRange(0, 2, 7, 2))
         );
 
-        List<Token> result = lexer.getTokens("let println \nlet let\nprintln");
+        List<Token> result = lexer.getTokens("let println \nnumber string\nprintln ");
 
         System.out.println(result);
         System.out.println(tokens);
@@ -118,7 +118,7 @@ class LexerTest {
                 new Token(DefaultTokenTypes.LITERAL, 42, 43, new LexicalRange(10, 1, 11, 1)),
                 new Token(DefaultTokenTypes.SEPARATOR, 43, 44, new LexicalRange(11, 1, 12, 1))
         );
-        List<Token> result = lexer.getTokens("let variable = 'Hello World!'; \nlet var = 2;");
+        List<Token> result = lexer.getTokens("let variable: string = 'Hello World!'; \nlet var:number=2+2.2;");
 
         System.out.println(result);
         System.out.println(tokens);
