@@ -1,10 +1,8 @@
 package Lexer;
 
-import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DefaultLexer implements Lexer {

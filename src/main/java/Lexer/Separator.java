@@ -3,7 +3,9 @@ package Lexer;
 import lombok.Getter;
 
 public enum Separator {
-    EOL(';');
+    EOL(';'),
+    TYPE(':');
+
 
     @Getter
     final char separator;

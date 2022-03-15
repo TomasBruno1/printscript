@@ -4,7 +4,9 @@ import lombok.Getter;
 
 public enum Keyword {
     LET("let"),
-    PRINTLN("println");
+    PRINTLN("println"),
+    NUMBER("number"),
+    STRING("string");
 
     @Getter
     final String keyword;
