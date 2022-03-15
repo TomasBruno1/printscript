@@ -1,5 +1,6 @@
 package AST.Expression;
 
+import AST.Node.NodeVisitor;
 import lombok.Getter;
 import lombok.Setter;
 import org.austral.ingsis.printscript.common.Token;
@@ -16,5 +17,10 @@ public class Operation implements Expression {
         this.left = left;
         this.right = right;
         this.op = op;
+    }
+
+    @Override
+    public void accept(NodeVisitor visitor) {
+
     }
 }

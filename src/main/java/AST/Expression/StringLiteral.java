@@ -1,5 +1,6 @@
 package AST.Expression;
 
+import AST.Node.NodeVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,4 +10,8 @@ public class StringLiteral implements Literal<String> {
     @Getter
     private String value;
 
+    @Override
+    public void accept(NodeVisitor visitor) {
+
+    }
 }

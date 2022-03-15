@@ -1,5 +1,7 @@
 package AST.Expression;
 
-public interface Expression {
-    // todo visitor pattern
+import AST.Node.Node;
+
+public interface Expression extends Node {
+
 }
