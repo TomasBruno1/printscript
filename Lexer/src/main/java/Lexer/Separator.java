@@ -5,7 +5,7 @@ import lombok.Getter;
 public enum Separator {
     EOL(';'),
     TYPE(':');
-
+    // todo add parenthesis
 
     @Getter
     final char separator;

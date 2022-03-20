@@ -5,7 +5,7 @@ import lombok.Getter;
 public enum Operator {
     PLUS('+'), MINUS('-'), MULTIPLY('*'), DIVIDE('/'),
     LEFT_PARENTHESIS('('), RIGHT_PARENTHESIS(')'),
-    EQUAL('=');
+    EQUALS('=');
 
     @Getter
     final char operator;
