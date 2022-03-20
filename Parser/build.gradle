@@ -1,0 +1,9 @@
+plugins {
+    id 'java-library'
+    id 'ingsis.common'
+}
+
+dependencies {
+    implementation project(':AST')
+    implementation project(':Lexer')
+}

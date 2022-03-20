@@ -1,14 +1,16 @@
 package AST.Expression;
 
+import AST.Node.Node;
 import AST.Node.NodeVisitor;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @AllArgsConstructor
-public class NumberLiteral implements Literal<Double> {
+public class ExpressionOptional implements Node {
 
-    @Getter
-    private Double value;
+    Operand operand;
+
+    String literal;
+    String identifier;
 
     @Override
     public void accept(NodeVisitor visitor) {

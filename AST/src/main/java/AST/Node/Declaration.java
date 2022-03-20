@@ -1,20 +1,22 @@
 package AST.Node;
 
 import AST.Expression.Expression;
-import AST.Expression.Identifier;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.austral.ingsis.printscript.common.Token;
 
 @AllArgsConstructor
 public class Declaration implements Node {
-    Identifier left;
-    Token type;
-    Expression right;
-
+    String varName;
+    String type;
+    
+    Expression value;
+    
+    public Declaration(String varName, String type) {
+        this.varName = varName;
+        this.type = type;
+    }
+    
     @Override
     public void accept(NodeVisitor visitor) {
-
+        
     }
 }

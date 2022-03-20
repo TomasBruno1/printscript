@@ -10,6 +10,7 @@ public class DefaultTokenizer implements Tokenizer {
     @Override
     public Token tokenize(String currentString, int from, int fromCol, int col, int row) {
         if(isOperator(currentString)) {
+            if(currentString.equals("=")) return new Token(DefaultTokenTypes.ASSIGN, from, from + 1, new LexicalRange(fromCol, row, col, row));
             return new Token(DefaultTokenTypes.OPERATOR, from, from + 1, new LexicalRange(fromCol, row, col, row));
         } else if(isSeparator(currentString)) {
             return new Token(DefaultTokenTypes.SEPARATOR, from, from + 1, new LexicalRange(fromCol, row, col, row));
