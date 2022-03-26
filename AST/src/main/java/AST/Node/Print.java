@@ -8,7 +8,5 @@ public class Print implements Node {
     Expression content;
 
     @Override
-    public void accept(NodeVisitor visitor) {
-
-    }
+    public void accept(NodeVisitor visitor) {}
 }

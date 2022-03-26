@@ -10,12 +10,13 @@ import org.jetbrains.annotations.NotNull;
 public class DeclarationParser extends TokenConsumer implements Parser<Declaration> {
 
     private final ExpressionParser expressionParser = new ExpressionParser(getStream());
-    
+
     public DeclarationParser(@NotNull TokenIterator stream) {
         super(stream);
     }
 
-    // Declaration -> Keyword Identifier Separator Keyword Separator | Keyword Identifier Separator Keyword Operator Expr Separator
+    // Declaration -> Keyword Identifier Separator Keyword Separator | Keyword Identifier Separator
+    // Keyword Operator Expr Separator
     @Override
     public Declaration parse() {
 
@@ -24,7 +25,7 @@ public class DeclarationParser extends TokenConsumer implements Parser<Declarati
         consume(DefaultTokenTypes.SEPARATOR, ":");
         String type = consume(DefaultTokenTypes.KEYWORD).getContent();
 
-        if(peek(DefaultTokenTypes.SEPARATOR, ";") != null) {
+        if (peek(DefaultTokenTypes.SEPARATOR, ";") != null) {
             consume(DefaultTokenTypes.SEPARATOR);
             return new Declaration(variable, type);
         }

@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 // Assignment -> Identifier Operator Expr Separator
 public class AssignmentParser extends TokenConsumer implements Parser<Assignment> {
-    
+
     private final ExpressionParser expressionParser = new ExpressionParser(getStream());
-    
+
     public AssignmentParser(@NotNull TokenIterator stream) {
         super(stream);
     }
@@ -19,9 +19,8 @@ public class AssignmentParser extends TokenConsumer implements Parser<Assignment
     @Override
     public Assignment parse() {
         String variable = consume(DefaultTokenTypes.IDENTIFIER).getContent();
-        consume(DefaultTokenTypes.OPERATOR, "=");
+        consume(DefaultTokenTypes.ASSIGN);
         Expression expression = expressionParser.parse();
-        consume(DefaultTokenTypes.SEPARATOR, ";");
         return new Assignment(variable, expression);
     }
 }

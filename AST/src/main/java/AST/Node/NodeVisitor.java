@@ -1,4 +1,3 @@
 package AST.Node;
 
-public interface NodeVisitor {
-}
+public interface NodeVisitor {}

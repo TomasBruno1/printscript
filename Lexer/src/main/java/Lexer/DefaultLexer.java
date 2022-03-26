@@ -1,16 +1,17 @@
 package Lexer;
 
-import org.austral.ingsis.printscript.common.Token;
-
+import ContentProvider.ContentProvider;
 import java.util.ArrayList;
 import java.util.List;
+import org.austral.ingsis.printscript.common.Token;
 
 public class DefaultLexer implements Lexer {
 
     private final Tokenizer tokenizer = new DefaultTokenizer();
 
     @Override
-    public List<Token> getTokens(String input) {
+    public List<Token> getTokens(ContentProvider provider) {
+        String input = provider.getContent();
         List<Token> tokens = new ArrayList<>();
 
         int length = input.length();
@@ -23,19 +24,25 @@ public class DefaultLexer implements Lexer {
 
             StringBuilder currentString = new StringBuilder();
             currentString.append(currentChar);
-            while (true){
+            while (true) {
                 if (currentChar == '"' || currentChar == '\'') {
-                    int nextQuoteMark = currentChar == '"' ? (input.substring(i+1)).indexOf('"') : (input.substring(i+1)).indexOf('\'');
-                    if(nextQuoteMark == -1) throw new IllegalArgumentException("Unclosed string literal");
-                    currentString.append(input, i+1, i+nextQuoteMark+2);
+                    int nextQuoteMark =
+                            currentChar == '"'
+                                    ? (input.substring(i + 1)).indexOf('"')
+                                    : (input.substring(i + 1)).indexOf('\'');
+                    if (nextQuoteMark == -1)
+                        throw new IllegalArgumentException("Unclosed string literal");
+                    currentString.append(input, i + 1, i + nextQuoteMark + 2);
                     i = i + nextQuoteMark + 1;
                     col = col + nextQuoteMark + 1;
                     break;
                 }
-                if (!Character.isLetterOrDigit(currentChar) && currentChar != '.' && currentChar != '_' ) break;
+                if (!Character.isLetterOrDigit(currentChar)
+                        && currentChar != '.'
+                        && currentChar != '_') break;
 
                 char nextChar;
-                if (i < length -1) {
+                if (i < length - 1) {
                     nextChar = input.charAt(i + 1);
                     if (Character.isLetterOrDigit(nextChar) || nextChar == '.' || nextChar == '_') {
                         currentString.append(nextChar);
@@ -53,11 +60,10 @@ public class DefaultLexer implements Lexer {
                 row++;
             }
 
-            if(!currentString.isEmpty() && currentString.charAt(0) > 32) {
+            if (!currentString.isEmpty() && currentString.charAt(0) > 32) {
                 tokens.add(tokenizer.tokenize(currentString.toString(), from, fromCol, col, row));
             }
         }
         return tokens;
     }
-
 }

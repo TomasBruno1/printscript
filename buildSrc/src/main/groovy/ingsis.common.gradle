@@ -1,5 +1,8 @@
 plugins {
     id 'java'
+    id "com.github.sherter.google-java-format"
+    id 'checkstyle'
+    id 'jacoco'
 }
 
 repositories {
@@ -27,4 +30,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
 }
+
+googleJavaFormat {
+    toolVersion = '1.13.0'
+    options style: 'AOSP'
+}
+
+tasks.named('verifyGoogleJavaFormat') {dependsOn('googleJavaFormat')}

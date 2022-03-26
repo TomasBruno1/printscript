@@ -9,11 +9,13 @@ public class ExpressionOptional implements Node {
 
     Operand operand;
 
-    String literal;
-    String identifier;
+    String value;
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) {}
 
+    @Override
+    public String toString() {
+        return "ExpressionOptional(" + "operand=" + operand + ", value='" + value + '\'' + ')';
     }
 }

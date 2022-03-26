@@ -4,11 +4,11 @@ import lombok.Getter;
 
 public enum Separator {
     EOL(';'),
+    LEFT_PARENTHESIS('('),
+    RIGHT_PARENTHESIS(')'),
     TYPE(':');
-    // todo add parenthesis
 
-    @Getter
-    final char separator;
+    @Getter final char separator;
 
     Separator(char separator) {
         this.separator = separator;
