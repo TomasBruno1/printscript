@@ -32,7 +32,6 @@ public class DeclarationParser extends TokenConsumer implements Parser<Declarati
 
         consume(DefaultTokenTypes.OPERATOR, "=");
         Expression expr = expressionParser.parse();
-        consume(DefaultTokenTypes.SEPARATOR, ";");
 
         return new Declaration(variable, type, expr);
     }

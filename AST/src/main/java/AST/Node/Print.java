@@ -9,4 +9,10 @@ public class Print implements Node {
 
     @Override
     public void accept(NodeVisitor visitor) {}
+
+    // toString
+    @Override
+    public String toString() {
+        return "Print(" + "content=" + content + ')';
+    }
 }

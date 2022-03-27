@@ -1,0 +1,22 @@
+Program:
+
+let a:number = 5;
+let b:number = 2;
+
+let c:number = a + b;
+
+println(c);
+
+let hello: string = "Hello";
+
+println(hello + " World");
+
+AST:
+
+                                            program
+              /                 |              |                |               |            \
+        declaration        declaration     declaration        print        declaration      print
+     /      |      \
+  name    type     expression
+   |        |          |
+  "a"      number      5

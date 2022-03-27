@@ -1,5 +1,6 @@
 package Parser;
 
+import AST.Node.CodeBlock;
 import AST.Node.Node;
 import Lexer.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.CoreTokenTypes;
@@ -20,30 +21,24 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
 
     @Override
     public Node parse() {
-        Content<String> next = peek(DefaultTokenTypes.KEYWORD);
+        CodeBlock program = new CodeBlock();
 
-        if (next == null) return null;
+        Content<String> next;
 
-        if (next.getContent().equals("let")) {
-            declarationParser.parse();
-        } else if (next.getContent().equals("println")) {
-            printParser.parse();
-        }
-
-        while (peek(CoreTokenTypes.EOF) != null) {
+        while (peek(CoreTokenTypes.EOF) == null) {
             next = peek(DefaultTokenTypes.KEYWORD);
             if (next != null) {
                 if (next.getContent().equals("let")) {
-                    declarationParser.parse();
+                    program.addChild(declarationParser.parse());
                 } else if (next.getContent().equals("println")) {
-                    printParser.parse();
-                }
+                    program.addChild(printParser.parse());
+                } else throw new IllegalStateException("Unexpected keyword: " + next.getContent());
             } else {
-                assignmentParser.parse();
+                program.addChild(assignmentParser.parse());
             }
+            consume(DefaultTokenTypes.SEPARATOR, ";");
         }
 
-        System.out.println(peek(DefaultTokenTypes.SEPARATOR, ";"));
-        return null;
+        return program;
     }
 }
