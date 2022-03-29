@@ -23,7 +23,7 @@ class LexerTest {
                         new Token(DefaultTokenTypes.OPERATOR, 6, 7, new LexicalRange(6, 0, 7, 0)),
                         new Token(DefaultTokenTypes.ASSIGN, 9, 10, new LexicalRange(0, 1, 1, 1)));
 
-        List<Token> result = lexer.getTokens(new StringContentProvider("+ - * / \n= \n "));
+        List<Token> result = lexer.lex(new StringContentProvider("+ - * / \n= \n "));
 
         System.out.println(result);
         System.out.println(tokens);
@@ -43,7 +43,7 @@ class LexerTest {
                         new Token(DefaultTokenTypes.KEYWORD, 27, 34, new LexicalRange(0, 2, 7, 2)));
 
         List<Token> result =
-                lexer.getTokens(new StringContentProvider("let println \nnumber string\nprintln "));
+                lexer.lex(new StringContentProvider("let println \nnumber string\nprintln "));
 
         System.out.println(result);
         System.out.println(tokens);
@@ -62,7 +62,7 @@ class LexerTest {
                         new Token(
                                 DefaultTokenTypes.OPERATOR, 17, 18, new LexicalRange(8, 1, 9, 1)));
 
-        List<Token> result = lexer.getTokens(new StringContentProvider(" +  let \nprintln * \n "));
+        List<Token> result = lexer.lex(new StringContentProvider(" +  let \nprintln * \n "));
 
         System.out.println(result);
         System.out.println(tokens);
@@ -80,7 +80,7 @@ class LexerTest {
                         new Token(
                                 DefaultTokenTypes.LITERAL, 23, 29, new LexicalRange(6, 1, 12, 1)));
         List<Token> result =
-                lexer.getTokens(new StringContentProvider(" \"Hello\r World!\"\n 534.6'54.6'"));
+                lexer.lex(new StringContentProvider(" \"Hello\r World!\"\n 534.6'54.6'"));
 
         System.out.println(result);
         System.out.println(tokens);
@@ -101,8 +101,7 @@ class LexerTest {
                                 38,
                                 new LexicalRange(1, 1, 18, 1)));
         List<Token> result =
-                lexer.getTokens(
-                        new StringContentProvider(" variable_name_123 \n vArIaBlE_NamE_123 "));
+                lexer.lex(new StringContentProvider(" variable_name_123 \n vArIaBlE_NamE_123 "));
 
         System.out.println(result);
         System.out.println(tokens);
@@ -152,7 +151,7 @@ class LexerTest {
                                 61,
                                 new LexicalRange(20, 1, 21, 1)));
         List<Token> result =
-                lexer.getTokens(
+                lexer.lex(
                         new StringContentProvider(
                                 "let variable: string = 'Hello World!'; \nlet var:number=2+2.2;"));
 
@@ -180,7 +179,7 @@ class LexerTest {
                         new Token(
                                 DefaultTokenTypes.LITERAL, 55, 56, new LexicalRange(12, 2, 13, 2)));
         List<Token> result =
-                lexer.getTokens(
+                lexer.lex(
                         new StringContentProvider(
                                 "\"Hello\n World! let\"\n ; let 534.6'54let.6' \n variable = 2"));
 

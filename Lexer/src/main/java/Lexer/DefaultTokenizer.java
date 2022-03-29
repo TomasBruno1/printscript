@@ -3,49 +3,37 @@ package Lexer;
 import java.util.Arrays;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
+import org.jetbrains.annotations.NotNull;
 
 public class DefaultTokenizer implements Tokenizer {
 
     @Override
     public Token tokenize(String currentString, int from, int fromCol, int col, int row) {
+        DefaultTokenTypes type = getType(currentString);
+        return new Token(
+                type,
+                from,
+                from + currentString.length(),
+                new LexicalRange(fromCol, row, col, row));
+    }
+
+    @NotNull
+    private DefaultTokenTypes getType(String currentString) {
+        DefaultTokenTypes type;
         if (isOperator(currentString)) {
             if (currentString.equals("="))
-                return new Token(
-                        DefaultTokenTypes.ASSIGN,
-                        from,
-                        from + 1,
-                        new LexicalRange(fromCol, row, col, row));
-            return new Token(
-                    DefaultTokenTypes.OPERATOR,
-                    from,
-                    from + 1,
-                    new LexicalRange(fromCol, row, col, row));
+                type = DefaultTokenTypes.ASSIGN;
+            else type = DefaultTokenTypes.OPERATOR;
         } else if (isSeparator(currentString)) {
-            return new Token(
-                    DefaultTokenTypes.SEPARATOR,
-                    from,
-                    from + 1,
-                    new LexicalRange(fromCol, row, col, row));
+            type = DefaultTokenTypes.SEPARATOR;
         } else if (isKeyword(currentString)) {
-            return new Token(
-                    DefaultTokenTypes.KEYWORD,
-                    from,
-                    from + currentString.length(),
-                    new LexicalRange(fromCol, row, col, row));
+            type = DefaultTokenTypes.KEYWORD;
         } else if (isLiteral(currentString)) {
-            return new Token(
-                    DefaultTokenTypes.LITERAL,
-                    from,
-                    from + currentString.length(),
-                    new LexicalRange(fromCol, row, col, row));
+            type = DefaultTokenTypes.LITERAL;
         } else if (isIdentifier(currentString)) {
-            return new Token(
-                    DefaultTokenTypes.IDENTIFIER,
-                    from,
-                    from + currentString.length(),
-                    new LexicalRange(fromCol, row, col, row));
-        }
-        throw new IllegalArgumentException("Unknown token: " + currentString);
+            type = DefaultTokenTypes.IDENTIFIER;
+        } else throw new IllegalArgumentException("Unknown token: " + currentString);
+        return type;
     }
 
     private boolean isKeyword(String currentString) {
@@ -72,11 +60,7 @@ public class DefaultTokenizer implements Tokenizer {
     }
 
     private boolean isLiteral(String currentString) {
-        if (currentString.charAt(0) == '"')
-            return currentString.charAt(currentString.length() - 1) == '"';
-        else if (currentString.charAt(0) == '\'')
-            return currentString.charAt(currentString.length() - 1) == '\'';
-        else return (currentString.matches("[0-9]{1,9}(\\.[0-9]*)?"));
+        return (currentString.matches("[0-9]{1,9}(\\.[0-9]*)?|\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'"));
     }
 
     private boolean isIdentifier(String currentString) {

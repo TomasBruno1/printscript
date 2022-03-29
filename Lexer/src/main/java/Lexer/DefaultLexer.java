@@ -10,7 +10,7 @@ public class DefaultLexer implements Lexer {
     private final Tokenizer tokenizer = new DefaultTokenizer();
 
     @Override
-    public List<Token> getTokens(ContentProvider provider) {
+    public List<Token> lex(ContentProvider provider) {
         String input = provider.getContent();
         List<Token> tokens = new ArrayList<>();
 
@@ -18,20 +18,13 @@ public class DefaultLexer implements Lexer {
         for (int i = 0, col = 0, row = 0; i < length; i++) {
 
             char currentChar = input.charAt(i);
-            int from = i;
-            int fromCol = col;
             col++;
 
             StringBuilder currentString = new StringBuilder();
             currentString.append(currentChar);
-            while (true) {
+            while (i < length - 1) {
                 if (currentChar == '"' || currentChar == '\'') {
-                    int nextQuoteMark =
-                            currentChar == '"'
-                                    ? (input.substring(i + 1)).indexOf('"')
-                                    : (input.substring(i + 1)).indexOf('\'');
-                    if (nextQuoteMark == -1)
-                        throw new IllegalArgumentException("Unclosed string literal");
+                    int nextQuoteMark = getNextQuoteMark(input, currentChar, i);
                     currentString.append(input, i + 1, i + nextQuoteMark + 2);
                     i = i + nextQuoteMark + 1;
                     col = col + nextQuoteMark + 1;
@@ -41,18 +34,13 @@ public class DefaultLexer implements Lexer {
                         && currentChar != '.'
                         && currentChar != '_') break;
 
-                char nextChar;
-                if (i < length - 1) {
-                    nextChar = input.charAt(i + 1);
-                    if (Character.isLetterOrDigit(nextChar) || nextChar == '.' || nextChar == '_') {
-                        currentString.append(nextChar);
-                        currentChar = nextChar;
-                        col++;
-                        i++;
-                        continue;
-                    }
-                }
-                break;
+                char nextChar = input.charAt(i + 1);
+                if (Character.isLetterOrDigit(nextChar) || nextChar == '.' || nextChar == '_') {
+                    currentString.append(nextChar);
+                    currentChar = nextChar;
+                    col++;
+                    i++;
+                } else break;
             }
 
             if (currentChar == '\n') {
@@ -61,9 +49,24 @@ public class DefaultLexer implements Lexer {
             }
 
             if (!currentString.isEmpty() && currentString.charAt(0) > 32) {
-                tokens.add(tokenizer.tokenize(currentString.toString(), from, fromCol, col, row));
+                tokens.add(
+                        tokenizer.tokenize(
+                                currentString.toString(),
+                                i - currentString.length() + 1,
+                                col - currentString.length(),
+                                col,
+                                row));
             }
         }
         return tokens;
+    }
+
+    private int getNextQuoteMark(String input, char currentChar, int i) {
+        int nextQuoteMark = currentChar == '"'
+                ? (input.substring(i + 1)).indexOf('"')
+                : (input.substring(i + 1)).indexOf('\'');
+        if (nextQuoteMark == -1)
+            throw new IllegalArgumentException("Unclosed string literal");
+        return nextQuoteMark;
     }
 }
