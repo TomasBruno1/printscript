@@ -7,6 +7,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.9'
+    implementation "io.beekeeper.gradle:beekeeper-formatter-plugin:0.10.1"
+//    implementation 'gradle.plugin.com.github.sherter.google-java-format:google-java-format-gradle-plugin:0.9'
     // implementation 'com.google.googlejavaformat:google-java-format:1.15.0'
 }

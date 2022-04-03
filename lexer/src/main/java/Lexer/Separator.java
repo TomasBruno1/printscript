@@ -8,7 +8,8 @@ public enum Separator {
     RIGHT_PARENTHESIS(')'),
     TYPE(':');
 
-    @Getter final char separator;
+    @Getter
+    final char separator;
 
     Separator(char separator) {
         this.separator = separator;

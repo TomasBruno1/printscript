@@ -8,7 +8,8 @@ public enum Keyword {
     NUMBER("number"),
     STRING("string");
 
-    @Getter final String keyword;
+    @Getter
+    final String keyword;
 
     Keyword(String keyword) {
         this.keyword = keyword;

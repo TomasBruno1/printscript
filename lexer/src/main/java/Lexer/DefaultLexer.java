@@ -30,9 +30,12 @@ public class DefaultLexer implements Lexer {
                     col = col + nextQuoteMark + 1;
                     break;
                 }
-                if (!Character.isLetterOrDigit(currentChar)
+                if (
+                    !Character.isLetterOrDigit(currentChar)
                         && currentChar != '.'
-                        && currentChar != '_') break;
+                        && currentChar != '_'
+                )
+                    break;
 
                 char nextChar = input.charAt(i + 1);
                 if (Character.isLetterOrDigit(nextChar) || nextChar == '.' || nextChar == '_') {
@@ -40,7 +43,8 @@ public class DefaultLexer implements Lexer {
                     currentChar = nextChar;
                     col++;
                     i++;
-                } else break;
+                } else
+                    break;
             }
 
             if (currentChar == '\n') {
@@ -48,14 +52,16 @@ public class DefaultLexer implements Lexer {
                 row++;
             }
 
-            if (!currentString.isEmpty() && currentString.charAt(0) > 32) {
+            if (currentString.length() != 0 && currentString.charAt(0) > 32) {
                 tokens.add(
-                        tokenizer.tokenize(
-                                currentString.toString(),
-                                i - currentString.length() + 1,
-                                col - currentString.length(),
-                                col,
-                                row));
+                    tokenizer.tokenize(
+                        currentString.toString(),
+                        i - currentString.length() + 1,
+                        col - currentString.length(),
+                        col,
+                        row
+                    )
+                );
             }
         }
         return tokens;
@@ -63,10 +69,11 @@ public class DefaultLexer implements Lexer {
 
     private int getNextQuoteMark(String input, char currentChar, int i) {
         int nextQuoteMark =
-                currentChar == '"'
-                        ? (input.substring(i + 1)).indexOf('"')
-                        : (input.substring(i + 1)).indexOf('\'');
-        if (nextQuoteMark == -1) throw new IllegalArgumentException("Unclosed string literal");
+            currentChar == '"'
+                ? (input.substring(i + 1)).indexOf('"')
+                : (input.substring(i + 1)).indexOf('\'');
+        if (nextQuoteMark == -1)
+            throw new IllegalArgumentException("Unclosed string literal");
         return nextQuoteMark;
     }
 }

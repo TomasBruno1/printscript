@@ -9,7 +9,8 @@ public enum Operator {
     DIVIDE('/'),
     EQUALS('=');
 
-    @Getter final char operator;
+    @Getter
+    final char operator;
 
     Operator(char operator) {
         this.operator = operator;

@@ -32,7 +32,8 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
                     program.addChild(declarationParser.parse());
                 } else if (next.getContent().equals("println")) {
                     program.addChild(printParser.parse());
-                } else throw new IllegalStateException("Unexpected keyword: " + next.getContent());
+                } else
+                    throw new IllegalStateException("Unexpected keyword: " + next.getContent());
             } else {
                 program.addChild(assignmentParser.parse());
             }
