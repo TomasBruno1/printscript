@@ -21,8 +21,7 @@ public class DefaultTokenizer implements Tokenizer {
     private DefaultTokenTypes getType(String currentString) {
         DefaultTokenTypes type;
         if (isOperator(currentString)) {
-            if (currentString.equals("="))
-                type = DefaultTokenTypes.ASSIGN;
+            if (currentString.equals("=")) type = DefaultTokenTypes.ASSIGN;
             else type = DefaultTokenTypes.OPERATOR;
         } else if (isSeparator(currentString)) {
             type = DefaultTokenTypes.SEPARATOR;

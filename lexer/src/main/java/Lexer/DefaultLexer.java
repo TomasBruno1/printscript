@@ -62,11 +62,11 @@ public class DefaultLexer implements Lexer {
     }
 
     private int getNextQuoteMark(String input, char currentChar, int i) {
-        int nextQuoteMark = currentChar == '"'
-                ? (input.substring(i + 1)).indexOf('"')
-                : (input.substring(i + 1)).indexOf('\'');
-        if (nextQuoteMark == -1)
-            throw new IllegalArgumentException("Unclosed string literal");
+        int nextQuoteMark =
+                currentChar == '"'
+                        ? (input.substring(i + 1)).indexOf('"')
+                        : (input.substring(i + 1)).indexOf('\'');
+        if (nextQuoteMark == -1) throw new IllegalArgumentException("Unclosed string literal");
         return nextQuoteMark;
     }
 }
