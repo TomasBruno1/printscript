@@ -1,6 +1,8 @@
 package Lexer;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 import org.jetbrains.annotations.NotNull;
@@ -14,15 +16,18 @@ public class DefaultTokenizer implements Tokenizer {
                 type,
                 from,
                 from + currentString.length(),
-                new LexicalRange(fromCol, row, col, row));
+                new LexicalRange(fromCol, row, col, row)
+        );
     }
 
     @NotNull
     private DefaultTokenTypes getType(String currentString) {
         DefaultTokenTypes type;
         if (isOperator(currentString)) {
-            if (currentString.equals("=")) type = DefaultTokenTypes.ASSIGN;
-            else type = DefaultTokenTypes.OPERATOR;
+            if (currentString.equals("="))
+                type = DefaultTokenTypes.ASSIGN;
+            else
+                type = DefaultTokenTypes.OPERATOR;
         } else if (isSeparator(currentString)) {
             type = DefaultTokenTypes.SEPARATOR;
         } else if (isKeyword(currentString)) {
@@ -31,31 +36,32 @@ public class DefaultTokenizer implements Tokenizer {
             type = DefaultTokenTypes.LITERAL;
         } else if (isIdentifier(currentString)) {
             type = DefaultTokenTypes.IDENTIFIER;
-        } else throw new IllegalArgumentException("Unknown token: " + currentString);
+        } else
+            throw new IllegalArgumentException("Unknown token: " + currentString);
         return type;
     }
 
     private boolean isKeyword(String currentString) {
         return Arrays.stream(Keyword.values())
-                .map(keyword -> keyword.getKeyword())
-                .toList()
-                .contains(currentString);
+            .map(keyword -> keyword.getKeyword())
+            .collect(Collectors.toList())
+            .contains(currentString);
     }
 
     private boolean isOperator(String currentString) {
         return (currentString.length() == 1)
-                && Arrays.stream(Operator.values())
-                        .map(operator -> operator.getOperator())
-                        .toList()
-                        .contains(currentString.charAt(0));
+            && Arrays.stream(Operator.values())
+                .map(operator -> operator.getOperator())
+                .collect(Collectors.toList())
+                .contains(currentString.charAt(0));
     }
 
     private boolean isSeparator(String currentString) {
         return (currentString.length() == 1)
-                && Arrays.stream(Separator.values())
-                        .map(separator -> separator.getSeparator())
-                        .toList()
-                        .contains(currentString.charAt(0));
+            && Arrays.stream(Separator.values())
+                .map(separator -> separator.getSeparator())
+                .collect(Collectors.toList())
+                .contains(currentString.charAt(0));
     }
 
     private boolean isLiteral(String currentString) {

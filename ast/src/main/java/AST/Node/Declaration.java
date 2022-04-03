@@ -16,19 +16,21 @@ public class Declaration implements Node {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {}
+    public void accept(NodeVisitor visitor) {
+    }
 
     @Override
     public String toString() {
         if (value != null)
             return "Declaration("
-                    + "varName="
-                    + varName
-                    + ", type="
-                    + type
-                    + ", value="
-                    + value.toString()
-                    + ')';
-        else return "Declaration(" + "varName=" + varName + ", type=" + type + ')';
+                + "varName="
+                + varName
+                + ", type="
+                + type
+                + ", value="
+                + value.toString()
+                + ')';
+        else
+            return "Declaration(" + "varName=" + varName + ", type=" + type + ')';
     }
 }

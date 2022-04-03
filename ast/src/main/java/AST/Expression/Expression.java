@@ -13,7 +13,8 @@ public class Expression implements Node {
     List<ExpressionOptional> exprOpts;
 
     @Override
-    public void accept(NodeVisitor visitor) {}
+    public void accept(NodeVisitor visitor) {
+    }
 
     @Override
     public String toString() {

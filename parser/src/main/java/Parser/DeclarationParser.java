@@ -19,7 +19,6 @@ public class DeclarationParser extends TokenConsumer implements Parser<Declarati
     // Keyword Operator Expr Separator
     @Override
     public Declaration parse() {
-
         consume(DefaultTokenTypes.KEYWORD, "let");
         String variable = consume(DefaultTokenTypes.IDENTIFIER).getContent();
         consume(DefaultTokenTypes.SEPARATOR, ":");

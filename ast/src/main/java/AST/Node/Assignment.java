@@ -10,7 +10,8 @@ public class Assignment implements Node {
     Expression value;
 
     @Override
-    public void accept(NodeVisitor visitor) {}
+    public void accept(NodeVisitor visitor) {
+    }
 
     @Override
     public String toString() {
