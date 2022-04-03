@@ -37,7 +37,7 @@ test {
 }
 
 googleJavaFormat {
-    toolVersion = '1.13.0'
+    toolVersion = '1.15.0'
     options style: 'AOSP'
 }
 

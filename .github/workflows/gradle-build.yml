@@ -29,6 +29,11 @@ jobs:
           distribution: 'temurin'
           server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
+          jvm-options:  --add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED \
+                        --add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED \
+                        --add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED \
+                        --add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED \
+                        --add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED \
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
