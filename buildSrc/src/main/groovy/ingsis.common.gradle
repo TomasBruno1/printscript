@@ -3,7 +3,10 @@ plugins {
     id "com.github.sherter.google-java-format"
     id 'checkstyle'
     id 'jacoco'
+    id 'maven-publish'
 }
+
+group 'org.tomtom.ingsis.printscript'
 
 repositories {
     mavenCentral()
@@ -39,3 +42,21 @@ googleJavaFormat {
 }
 
 tasks.named('verifyGoogleJavaFormat') {dependsOn('googleJavaFormat')}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/TomasBruno1/printscript")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
