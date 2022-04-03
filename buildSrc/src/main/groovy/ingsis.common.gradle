@@ -44,6 +44,9 @@ test {
 
 //tasks.named('verifyGoogleJavaFormat') {dependsOn('googleJavaFormat')}
 
+build.dependsOn('spotlessApply')
+build.dependsOn('spotlessJavaApply')
+
 publishing {
     repositories {
         maven {
