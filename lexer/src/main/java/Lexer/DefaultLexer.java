@@ -14,7 +14,7 @@ public class DefaultLexer implements Lexer {
         String input = provider.getContent();
         List<Token> tokens = new ArrayList<>();
 
-        int length =   input.length();
+        int length = input.length();
         for (int i = 0, col = 0, row = 0; i < length; i++) {
 
             char currentChar = input.charAt(i);
