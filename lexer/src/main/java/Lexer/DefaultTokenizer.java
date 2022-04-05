@@ -3,6 +3,10 @@ package Lexer;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import Commons.DefaultTokenTypes;
+import Commons.Keyword;
+import Commons.Operator;
+import Commons.Separator;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +47,7 @@ public class DefaultTokenizer implements Tokenizer {
 
     private boolean isKeyword(String currentString) {
         return Arrays.stream(Keyword.values())
-            .map(keyword -> keyword.getKeyword())
+            .map(Keyword::getKeyword)
             .collect(Collectors.toList())
             .contains(currentString);
     }
@@ -51,7 +55,7 @@ public class DefaultTokenizer implements Tokenizer {
     private boolean isOperator(String currentString) {
         return (currentString.length() == 1)
             && Arrays.stream(Operator.values())
-                .map(operator -> operator.getOperator())
+                .map(Operator::getOperator)
                 .collect(Collectors.toList())
                 .contains(currentString.charAt(0));
     }
@@ -59,7 +63,7 @@ public class DefaultTokenizer implements Tokenizer {
     private boolean isSeparator(String currentString) {
         return (currentString.length() == 1)
             && Arrays.stream(Separator.values())
-                .map(separator -> separator.getSeparator())
+                .map(Separator::getSeparator)
                 .collect(Collectors.toList())
                 .contains(currentString.charAt(0));
     }

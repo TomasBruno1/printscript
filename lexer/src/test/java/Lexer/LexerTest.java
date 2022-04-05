@@ -2,6 +2,7 @@ package Lexer;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import Commons.DefaultTokenTypes;
 import ContentProvider.StringContentProvider;
 import java.util.List;
 import org.austral.ingsis.printscript.common.LexicalRange;

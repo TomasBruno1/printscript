@@ -2,7 +2,7 @@ package Parser;
 
 import AST.Expression.Expression;
 import AST.Node.Declaration;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +15,9 @@ public class DeclarationParser extends TokenConsumer implements Parser<Declarati
         super(stream);
     }
 
-    // Declaration -> Keyword Identifier Separator Keyword Separator | Keyword Identifier Separator
-    // Keyword Operator Expr Separator
+    // Declaration -> Commons.Keyword Identifier Commons.Separator Commons.Keyword Commons.Separator | Commons.Keyword
+    // Identifier Commons.Separator
+    // Commons.Keyword Commons.Operator Expr Commons.Separator
     @Override
     public Declaration parse() {
         consume(DefaultTokenTypes.KEYWORD, "let");

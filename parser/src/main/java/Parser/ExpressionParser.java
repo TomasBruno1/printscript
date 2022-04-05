@@ -3,7 +3,7 @@ package Parser;
 import AST.Expression.Expression;
 import AST.Expression.ExpressionOptional;
 import AST.Expression.Operand;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import java.util.ArrayList;
 import java.util.List;
 import org.austral.ingsis.printscript.common.TokenConsumer;
@@ -11,7 +11,7 @@ import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
 
 // Expr -> Literal ExprOpt* | Identifier ExprOpt*
-// ExprOpt -> Operator Literal | Operator Identifier
+// ExprOpt -> Commons.Operator Literal | Commons.Operator Identifier
 
 public class ExpressionParser extends TokenConsumer implements Parser<Expression> {
     public ExpressionParser(@NotNull TokenIterator stream) {

@@ -2,7 +2,7 @@ package Parser;
 
 import AST.Node.CodeBlock;
 import AST.Node.Node;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.CoreTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.Content;

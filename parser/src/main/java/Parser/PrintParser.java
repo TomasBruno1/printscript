@@ -2,7 +2,7 @@ package Parser;
 
 import AST.Expression.Expression;
 import AST.Node.Print;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;

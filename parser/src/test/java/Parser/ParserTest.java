@@ -6,7 +6,7 @@ import AST.Expression.Expression;
 import AST.Expression.ExpressionOptional;
 import AST.Expression.Operand;
 import AST.Node.*;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import java.util.List;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;

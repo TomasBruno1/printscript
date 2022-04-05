@@ -1,4 +1,4 @@
-package Lexer;
+package Commons;
 
 import org.austral.ingsis.printscript.common.TokenType;
 import org.jetbrains.annotations.NotNull;

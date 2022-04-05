@@ -7,7 +7,7 @@ Declaration | Assignment | PrintLn | Expr | Literal
 
 Declaration -> Keyword Identifier Separator Keyword Separator | Keyword Identifier Separator Keyword Operator Expr Separator
 Assignment -> Identifier Operator Expr Separator
-PrintLn -> Keyword Operator Expr Operator Separator // Los () son operators aparentemente xd
+PrintLn -> Keyword Separator Expr Separator Separator
 Literal -> StringLiteral | NumberLiteral
 Expr -> Literal ExprOpt* | Identifier ExprOpt*
 ExprOpt -> Operator Expr
