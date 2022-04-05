@@ -1,0 +1,10 @@
+plugins {
+    id 'java-library'
+    id 'ingsis.common'
+}
+
+version '1.0.1'
+
+dependencies {
+    implementation project(':ast')
+}
