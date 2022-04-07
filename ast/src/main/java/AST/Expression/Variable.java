@@ -2,10 +2,12 @@ package AST.Expression;
 
 import AST.Node.NodeVisitor;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
 public class Variable implements Function {
 
+    @Getter
     private String value;
 
     @Override
