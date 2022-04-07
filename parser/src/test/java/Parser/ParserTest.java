@@ -3,8 +3,9 @@ package Parser;
 import static org.junit.jupiter.api.Assertions.*;
 
 import AST.Expression.Expression;
-import AST.Expression.ExpressionOptional;
+import AST.Expression.Function;
 import AST.Expression.Operand;
+import AST.Expression.Variable;
 import AST.Node.*;
 import Commons.DefaultTokenTypes;
 import java.util.List;
@@ -43,7 +44,7 @@ class ParserTest {
                         )
                     )
             );
-        Assignment assignment = new Assignment("a", new Expression("5", List.of()));
+        Assignment assignment = new Assignment("a", new Variable("5"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
@@ -75,7 +76,7 @@ class ParserTest {
                         )
                     )
             );
-        Assignment assignment = new Assignment("a", new Expression("b", List.of()));
+        Assignment assignment = new Assignment("a", new Variable("b"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
@@ -107,14 +108,14 @@ class ParserTest {
                         )
                     )
             );
-        Assignment assignment = new Assignment("a", new Expression("'a'", List.of()));
+        Assignment assignment = new Assignment("a", new Variable("'a'"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
     @Test
     public void expressionParserTestForSimpleSum() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + 3",
                         List.of(
@@ -140,14 +141,14 @@ class ParserTest {
                     )
             );
         Expression expression =
-            new Expression("2", List.of(new ExpressionOptional(Operand.SUM, "3")));
+            new Expression(new Variable("2"), Operand.SUM, new Variable("3"));
         assertEquals(expression.toString(), parser.parse().toString());
     }
 
     @Test
     public void expressionParserTestForNumberOperation() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + 3 * 4 - 10 / 5",
                         List.of(
@@ -210,12 +211,16 @@ class ParserTest {
             );
         Expression expression =
             new Expression(
-                    "2",
-                    List.of(
-                        new ExpressionOptional(Operand.SUM, "3"),
-                        new ExpressionOptional(Operand.MUL, "4"),
-                        new ExpressionOptional(Operand.SUB, "10"),
-                        new ExpressionOptional(Operand.DIV, "5")
+                    new Expression(
+                            new Variable("2"),
+                            Operand.SUM,
+                            new Expression(new Variable("3"), Operand.MUL, new Variable("4"))
+                    ),
+                    Operand.SUB,
+                    new Expression(
+                            new Variable("10"),
+                            Operand.DIV,
+                            new Variable("5")
                     )
             );
         assertEquals(expression.toString(), parser.parse().toString());
@@ -223,8 +228,8 @@ class ParserTest {
 
     @Test
     public void expressionParserTestForNumberAndVariableOperation() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + a",
                         List.of(
@@ -250,14 +255,14 @@ class ParserTest {
                     )
             );
         Expression expression =
-            new Expression("2", List.of(new ExpressionOptional(Operand.SUM, "a")));
+            new Expression(new Variable("2"), Operand.SUM, new Variable("a"));
         assertEquals(expression.toString(), parser.parse().toString());
     }
 
     @Test
     public void expressionParserTestForMixedOperation() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + a * 'hola' - 8",
                         List.of(
@@ -308,12 +313,13 @@ class ParserTest {
             );
         Expression expression =
             new Expression(
-                    "2",
-                    List.of(
-                        new ExpressionOptional(Operand.SUM, "a"),
-                        new ExpressionOptional(Operand.MUL, "'hola'"),
-                        new ExpressionOptional(Operand.SUB, "8")
-                    )
+                    new Expression(
+                            new Variable("2"),
+                            Operand.SUM,
+                            new Expression(new Variable("a"), Operand.MUL, new Variable("'hola'"))
+                    ),
+                    Operand.SUB,
+                    new Variable("8")
             );
         assertEquals(expression.toString(), parser.parse().toString());
     }
@@ -352,7 +358,7 @@ class ParserTest {
                         )
                     )
             );
-        Print print = new Print(new Expression("'hola'", List.of()));
+        Print print = new Print(new Variable("'hola'"));
         assertEquals(print.toString(), parser.parse().toString());
     }
 
@@ -452,7 +458,7 @@ class ParserTest {
                         )
                     )
             );
-        Declaration declaration = new Declaration("a", "number", new Expression("8", List.of()));
+        Declaration declaration = new Declaration("a", "number", new Variable("8"));
         assertEquals(declaration.toString(), parser.parse().toString());
     }
 
@@ -618,15 +624,15 @@ class ParserTest {
             );
 
         CodeBlock codeBlock = new CodeBlock();
-        codeBlock.addChild(new Declaration("a", "number", new Expression("8", List.of())));
-        codeBlock.addChild(new Declaration("b", "string", new Expression("'8'", List.of())));
+        codeBlock.addChild(new Declaration("a", "number", new Variable("8")));
+        codeBlock.addChild(new Declaration("b", "string", new Variable("'8'")));
         codeBlock.addChild(
             new Assignment(
                     "a",
-                    new Expression("a", List.of(new ExpressionOptional(Operand.SUM, "b")))
+                    new Expression(new Variable("a"), Operand.SUM, new Variable("b"))
             )
         );
-        codeBlock.addChild(new Print(new Expression("a", List.of())));
+        codeBlock.addChild(new Print(new Variable("a")));
         assertEquals(codeBlock.toString(), parser.parse().toString());
     }
 

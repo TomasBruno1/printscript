@@ -1,7 +1,6 @@
 package Interpreter;
 
-import AST.Expression.Expression;
-import AST.Expression.ExpressionOptional;
+import AST.Expression.Function;
 import AST.Node.*;
 import lombok.Getter;
 
@@ -27,20 +26,18 @@ public class InterpreterVisitor implements NodeVisitor {
     public void visit(Declaration declaration) {
         String type = declaration.getType();
         String name = declaration.getVarName();
-        Expression expression = declaration.getValue();
+        Function function = declaration.getValue();
 
-        if(type.equals("number")) {
-            numericVariables.put(name, )
-        }
+        // if(type.equals("number")) {
+        // numericVariables.put(name, )
+        // }
     }
 
     @Override
     public void visit(Assignment function) {
-
     }
 
     @Override
     public void visit(Print print) {
-
     }
 }

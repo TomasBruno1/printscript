@@ -1,6 +1,6 @@
 package AST.Node;
 
-import AST.Expression.Expression;
+import AST.Expression.Function;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ public class Declaration implements Node {
     String varName;
     String type;
 
-    Expression value;
+    Function value;
 
     public Declaration(String varName, String type) {
         this.varName = varName;

@@ -1,6 +1,6 @@
 package Parser;
 
-import AST.Expression.Expression;
+import AST.Expression.Function;
 import AST.Node.Declaration;
 import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DeclarationParser extends TokenConsumer implements Parser<Declaration> {
 
-    private final ExpressionParser expressionParser = new ExpressionParser(getStream());
+    private final FunctionParser functionParser = new FunctionParser(getStream());
 
     public DeclarationParser(@NotNull TokenIterator stream) {
         super(stream);
@@ -31,8 +31,8 @@ public class DeclarationParser extends TokenConsumer implements Parser<Declarati
         }
 
         consume(DefaultTokenTypes.ASSIGN, "=");
-        Expression expr = expressionParser.parse();
+        Function function = functionParser.parse();
 
-        return new Declaration(variable, type, expr);
+        return new Declaration(variable, type, function);
     }
 }
