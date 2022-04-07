@@ -15,7 +15,7 @@ class LexerTest {
 
     // + - * / ( ) =
     @Test
-    public void operandLexerTest() {
+    public void operandLexerTest() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(DefaultTokenTypes.OPERATOR, 0, 1, new LexicalRange(0, 0, 1, 0)),
@@ -35,7 +35,7 @@ class LexerTest {
     }
 
     @Test
-    public void keywordLexerTest() {
+    public void keywordLexerTest() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(DefaultTokenTypes.KEYWORD, 0, 3, new LexicalRange(0, 0, 3, 0)),
@@ -56,7 +56,7 @@ class LexerTest {
     }
 
     @Test
-    public void operatorAndKeywordLexerTest() {
+    public void operatorAndKeywordLexerTest() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(DefaultTokenTypes.OPERATOR, 1, 2, new LexicalRange(1, 0, 2, 0)),
@@ -80,7 +80,7 @@ class LexerTest {
     }
 
     @Test
-    public void literalLexerTest() {
+    public void literalLexerTest() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(DefaultTokenTypes.LITERAL, 1, 16, new LexicalRange(1, 0, 16, 0)),
@@ -103,7 +103,7 @@ class LexerTest {
     }
 
     @Test
-    public void identifierLexerTest() {
+    public void identifierLexerTest() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(
@@ -130,7 +130,7 @@ class LexerTest {
     }
 
     @Test
-    public void integrationLexerTest() {
+    public void integrationLexerTest() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(DefaultTokenTypes.KEYWORD, 0, 3, new LexicalRange(0, 0, 3, 0)),
@@ -220,7 +220,7 @@ class LexerTest {
     }
 
     @Test
-    public void integrationLexerTest2() {
+    public void integrationLexerTest2() throws UnknownTokenException {
         List<Token> tokens =
             List.of(
                 new Token(DefaultTokenTypes.LITERAL, 0, 19, new LexicalRange(0, 0, 19, 0)),
@@ -264,5 +264,10 @@ class LexerTest {
 
         assertEquals(tokens.size(), result.size());
         assertTrue(result.containsAll(tokens));
+    }
+
+    @Test
+    public void lexingAnUnknownTokenShouldThrowException() {
+        assertThrows(UnknownTokenException.class, () -> lexer.lex(new StringContentProvider("@")));
     }
 }

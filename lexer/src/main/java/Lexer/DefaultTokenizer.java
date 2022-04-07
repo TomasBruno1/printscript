@@ -9,13 +9,14 @@ import Commons.Operator;
 import Commons.Separator;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
-import org.jetbrains.annotations.NotNull;
 
 public class DefaultTokenizer implements Tokenizer {
 
     @Override
-    public Token tokenize(String currentString, int from, int fromCol, int col, int row) {
+    public Token tokenize(String currentString, int from, int fromCol, int col, int row) throws UnknownTokenException {
         DefaultTokenTypes type = getType(currentString);
+        if (type == null)
+            throw new UnknownTokenException(currentString, from, fromCol, col, row);
         return new Token(
                 type,
                 from,
@@ -24,7 +25,6 @@ public class DefaultTokenizer implements Tokenizer {
         );
     }
 
-    @NotNull
     private DefaultTokenTypes getType(String currentString) {
         DefaultTokenTypes type;
         if (isOperator(currentString)) {
@@ -41,7 +41,7 @@ public class DefaultTokenizer implements Tokenizer {
         } else if (isIdentifier(currentString)) {
             type = DefaultTokenTypes.IDENTIFIER;
         } else
-            throw new IllegalArgumentException("Unknown token: " + currentString);
+            type = null;
         return type;
     }
 

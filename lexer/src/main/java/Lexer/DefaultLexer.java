@@ -10,7 +10,7 @@ public class DefaultLexer implements Lexer {
     private final Tokenizer tokenizer = new DefaultTokenizer();
 
     @Override
-    public List<Token> lex(ContentProvider provider) {
+    public List<Token> lex(ContentProvider provider) throws UnknownTokenException {
         String input = provider.getContent();
         List<Token> tokens = new ArrayList<>();
 

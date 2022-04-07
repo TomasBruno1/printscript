@@ -1,0 +1,15 @@
+plugins {
+    id 'java-library'
+    id 'ingsis.common'
+}
+
+version '1.0.1'
+
+dependencies {
+    implementation group: 'info.picocli', name: 'picocli', version: '4.6.1'
+    implementation group: 'com.github.lalyos', name: 'jfiglet', version: '0.0.8'
+
+    implementation project(':lexer')
+    implementation project(':parser')
+    implementation project(':ast')
+}
