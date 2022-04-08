@@ -16,7 +16,7 @@ public class DefaultTokenizer implements Tokenizer {
     public Token tokenize(String currentString, int from, int fromCol, int col, int row) throws UnknownTokenException {
         DefaultTokenTypes type = getType(currentString);
         if (type == null)
-            throw new UnknownTokenException(currentString, from, fromCol, col, row);
+            throw new UnknownTokenException(currentString, fromCol, row);
         return new Token(
                 type,
                 from,

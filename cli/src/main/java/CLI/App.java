@@ -42,46 +42,64 @@ public class App {
             }
         }
 
+        try {
+            file = getFile("testeo.txt");
+        } catch (IOException ignored) {
+        }
+        mode = "interpretation";
+
         ContentProvider aContentProvider = new FileContentProvider(file);
-        TaskProgressPrinter.printStart(Task.Execution);
-        Timer executionTimer = new Timer();
-        printSpaces(1);
 
         try {
-            Lexer lexer = new DefaultLexer();
-            TaskProgressPrinter.printStart(Task.Lexing);
             Timer timer = new Timer();
-            List<Token> tokens = lexer.lex(aContentProvider);
-            timer.stop();
-            TaskProgressPrinter.printEnd(Task.Lexing, timer);
-
-            Parser<Node> parser = new DefaultParser(TokenIterator.create(aContentProvider.getContent(), tokens));
-            TaskProgressPrinter.printStart(Task.Parsing);
-            timer.reset();
-            Node root = parser.parse();
-            timer.stop();
-            TaskProgressPrinter.printEnd(Task.Parsing, timer);
-
-            if (mode.equals(Mode.Interpretation.getMode())) {
-                TaskProgressPrinter.printStart(Task.Interpretation);
-                timer.reset();
-                // todo implement interpretation
-                timer.stop();
-                executionTimer.stop();
-                TaskProgressPrinter.printEnd(Task.Interpretation, timer);
-
-            } else if (mode.equals(Mode.Validation.getMode())) {
-                TaskProgressPrinter.printStart(Task.Validation);
-                timer.reset();
-                // todo implement validation
-                timer.stop();
-                executionTimer.stop();
-                TaskProgressPrinter.printEnd(Task.Validation, timer);
-            }
-            TaskProgressPrinter.printEnd(Task.Execution, executionTimer);
+            List<Token> tokens = executeLexerTask(timer, aContentProvider);
+            Node root = executeParserTask(timer, aContentProvider, tokens);
+            if (mode.equals(Mode.Interpretation.getMode()))
+                executeInterpretationTask(timer, root);
+            else if (mode.equals(Mode.Validation.getMode()))
+                executeValidationTask(timer, root);
         } catch (UnknownTokenException e) {
             System.out.println("Error: " + e.getMessage());
         }
+    }
+
+    private static List<Token> executeLexerTask(Timer timer, ContentProvider aContentProvider)
+            throws UnknownTokenException {
+        Lexer lexer = new DefaultLexer();
+        TaskProgressPrinter.printStart(Task.Lexing);
+        timer.start();
+        List<Token> tokens = lexer.lex(aContentProvider);
+        timer.stop();
+        TaskProgressPrinter.printEnd(Task.Lexing, timer);
+        return tokens;
+    }
+
+    private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens) {
+        Parser<Node> parser = new DefaultParser(TokenIterator.create(aContentProvider.getContent(), tokens));
+        TaskProgressPrinter.printStart(Task.Parsing);
+        timer.start();
+        Node root = parser.parse();
+        timer.stop();
+        TaskProgressPrinter.printEnd(Task.Parsing, timer);
+        return root;
+    }
+
+    private static void executeInterpretationTask(Timer timer, Node root) {
+        TaskProgressPrinter.printStart(Task.Interpretation);
+        timer.start();
+        // todo implement interpretation
+        System.out.println(root.toString());
+        timer.stop();
+        TaskProgressPrinter.printEnd(Task.Interpretation, timer);
+    }
+
+    private static void executeValidationTask(Timer timer, Node root) {
+        TaskProgressPrinter.printStart(Task.Validation);
+        timer.start();
+        // todo implement validation
+        System.out.println(root.toString());
+        timer.stop();
+        TaskProgressPrinter.printEnd(Task.Validation, timer);
     }
 
     public static String askForString(String question) {

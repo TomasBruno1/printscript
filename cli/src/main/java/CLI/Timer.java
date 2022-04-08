@@ -4,10 +4,6 @@ public class Timer {
     private long startTime;
     private long endTime;
 
-    public Timer() {
-        startTime = System.currentTimeMillis();
-    }
-
     public void stop() {
         endTime = System.currentTimeMillis();
     }
@@ -16,7 +12,7 @@ public class Timer {
         return endTime - startTime;
     }
 
-    public void reset() {
+    public void start() {
         startTime = System.currentTimeMillis();
     }
 
