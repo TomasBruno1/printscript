@@ -4,9 +4,6 @@ import AST.Expression.Function;
 import AST.Node.*;
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class InterpreterVisitor implements NodeVisitor {
 
     @Getter
@@ -26,10 +23,12 @@ public class InterpreterVisitor implements NodeVisitor {
         Function function = declaration.getValue();
         function.accept(solverVisitor);
 
-        if(type.equals("number")) {
-            if(!isNumber(solverVisitor.result)) throw new TypeMismatchException();
-        } else if(type.equals("string")) {
-            if(!isString(solverVisitor.result)) throw new TypeMismatchException();
+        if (type.equals("number")) {
+            if (!isNumber(solverVisitor.result))
+                throw new TypeMismatchException();
+        } else if (type.equals("string")) {
+            if (!isString(solverVisitor.result))
+                throw new TypeMismatchException();
         }
 
         solverVisitor.declareVariable(name);
