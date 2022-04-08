@@ -14,9 +14,6 @@ public class InterpreterVisitor implements NodeVisitor {
 
     SolverVisitor solverVisitor = new SolverVisitor();
 
-    Map<String, Integer> numericVariables = new HashMap<>();
-    Map<String, String> stringVariables = new HashMap<>();
-
     @Override
     public void visit(CodeBlock codeBlock) {
         codeBlock.getChildren().forEach(node -> node.accept(this));
@@ -27,10 +24,23 @@ public class InterpreterVisitor implements NodeVisitor {
         String type = declaration.getType();
         String name = declaration.getVarName();
         Function function = declaration.getValue();
+        function.accept(solverVisitor);
 
-        // if(type.equals("number")) {
-        // numericVariables.put(name, )
-        // }
+        if(type.equals("number")) {
+            if(!isNumber(solverVisitor.result)) throw new TypeMismatchException();
+        } else if(type.equals("string")) {
+            if(!isString(solverVisitor.result)) throw new TypeMismatchException();
+        }
+
+        solverVisitor.declareVariable(name);
+    }
+
+    private boolean isString(String result) {
+        return result.matches("\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'");
+    }
+
+    private boolean isNumber(String result) {
+        return result.matches("-?[0-9]{1,9}(\\.[0-9]*)?");
     }
 
     @Override
