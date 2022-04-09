@@ -15,7 +15,7 @@ class InterpreterVisitorTest {
         InterpreterVisitor visitor = new InterpreterVisitor();
         Print printStatement = new Print(new Variable("45"));
         printStatement.accept(visitor);
-        assertEquals("45\n", visitor.getResult().read());
+        assertEquals("45", visitor.getResult().read());
     }
 
     @Test
@@ -23,7 +23,7 @@ class InterpreterVisitorTest {
         InterpreterVisitor visitor = new InterpreterVisitor();
         Print printStatement = new Print(new Expression(new Variable("45"), Operand.SUM, new Variable("5")));
         printStatement.accept(visitor);
-        assertEquals("50\n", visitor.getResult().read());
+        assertEquals("50", visitor.getResult().read());
     }
 
     @Test
@@ -38,7 +38,7 @@ class InterpreterVisitorTest {
                 )
         );
         printStatement.accept(visitor);
-        assertEquals("100Hello world!\n", visitor.getResult().read());
+        assertEquals("100Hello world!", visitor.getResult().read());
     }
 
     @Test
@@ -54,7 +54,7 @@ class InterpreterVisitorTest {
         program.addChild(new Declaration("string", "string", new Variable("\"Hello\"")));
         program.addChild(new Print(new Expression(new Variable("string"), Operand.SUM, new Variable("\" world!\""))));
         program.accept(visitor);
-        assertEquals("45\n2\n6\nHello world!\n", visitor.getResult().read());
+        assertEquals("4526Hello world!", visitor.getResult().read());
     }
 
 }
