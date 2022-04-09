@@ -32,9 +32,15 @@ class InterpreterVisitorTest {
     @Test
     public void test003_WhenVisitingAPrintStatementWithAMixedExpressionThenItsResultShouldBeWritten() {
         InterpreterVisitor visitor = new InterpreterVisitor();
-        Print printStatement = new Print(new Expression(new Variable("100"), Operand.SUM, new Expression(new Variable("\"Hello\""), Operand.SUM, new Variable("\" world!\""))));
+        Print printStatement = new Print(
+                new Expression(
+                        new Variable("100"),
+                        Operand.SUM,
+                        new Expression(new Variable("\"Hello\""), Operand.SUM, new Variable("\" world!\""))
+                )
+        );
         printStatement.accept(visitor);
-        assertEquals("100Hello world!\n////", visitor.getResult().read());
+        assertEquals("100Hello world!\n", visitor.getResult().read());
     }
 
     @Test

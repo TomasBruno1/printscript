@@ -27,7 +27,7 @@ public class InterpreterVisitor implements NodeVisitor {
         String name = declaration.getVarName();
         Function function = declaration.getValue();
         solverVisitor.declareVariable(name);
-        if(function != null) {
+        if (function != null) {
             function.accept(solverVisitor);
             checkType(type);
             solverVisitor.assignVariable(name);
