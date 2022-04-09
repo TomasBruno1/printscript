@@ -1,6 +1,7 @@
 package Interpreter;
 
 import AST.Expression.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
@@ -9,12 +10,12 @@ import java.util.Map;
 @NoArgsConstructor
 public class SolverVisitor implements ExpressionVisitor {
 
-    String result;
+    @Getter
+    private String result;
 
-    Map<String, String> variables = new HashMap<>();
+    private Map<String, String> variables = new HashMap<>();
 
-    String stringRegex = "\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'";
-    String numberRegex = "-?[0-9]{1,9}(\\.[0-9]*)?";
+    private final String numberRegex = "-?[0-9]{1,9}(\\.[0-9]*)?";
 
     public SolverVisitor(Map<String, String> variables) {
         this.variables = variables;
@@ -44,6 +45,7 @@ public class SolverVisitor implements ExpressionVisitor {
     }
 
     private boolean isStringOperation(String leftResult, String rightResult) {
+        String stringRegex = "\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'";
         return (leftResult.matches(stringRegex) && rightResult.matches(numberRegex))
             || ((leftResult.matches(numberRegex) && rightResult.matches(stringRegex)))
             || (leftResult.matches(stringRegex) && rightResult.matches(stringRegex));
@@ -95,7 +97,7 @@ public class SolverVisitor implements ExpressionVisitor {
 
     @Override
     public void visitVariable(Variable variable) {
-        result = variable.getValue();
+        result = variables.containsKey(variable.getValue()) ? variables.get(variable.getValue()) : variable.getValue();
     }
 
     private String getResult(Function function) {
@@ -104,6 +106,10 @@ public class SolverVisitor implements ExpressionVisitor {
     }
 
     public void declareVariable(String name) {
+        variables.put(name, null);
+    }
+
+    public void assignVariable(String name) {
         variables.put(name, result);
     }
 }

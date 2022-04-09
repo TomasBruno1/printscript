@@ -17,7 +17,7 @@ class SolverVisitorTest {
         String expected = "3";
         SolverVisitor visitor = new SolverVisitor();
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -31,7 +31,7 @@ class SolverVisitorTest {
         String expected = "7";
         SolverVisitor visitor = new SolverVisitor();
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -49,7 +49,7 @@ class SolverVisitorTest {
         String expected = "0.5";
         SolverVisitor visitor = new SolverVisitor();
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -63,7 +63,7 @@ class SolverVisitorTest {
 
         SolverVisitor visitor = new SolverVisitor(variables);
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -86,7 +86,7 @@ class SolverVisitorTest {
 
         SolverVisitor visitor = new SolverVisitor(variables);
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -96,7 +96,7 @@ class SolverVisitorTest {
         String expected = "\"Hello world!\"";
         SolverVisitor visitor = new SolverVisitor();
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -114,7 +114,7 @@ class SolverVisitorTest {
 
         SolverVisitor visitor = new SolverVisitor(variables);
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -128,7 +128,7 @@ class SolverVisitorTest {
         String expected = "\"Hello5.12!!!\"";
         SolverVisitor visitor = new SolverVisitor();
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 
@@ -150,7 +150,7 @@ class SolverVisitorTest {
 
         SolverVisitor visitor = new SolverVisitor(variables);
         input.accept(visitor);
-        String actual = visitor.result;
+        String actual = visitor.getResult();
         assertEquals(expected, actual);
     }
 

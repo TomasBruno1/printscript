@@ -5,7 +5,7 @@ public interface NodeVisitor {
 
     void visit(Declaration declaration);
 
-    void visit(Assignment function);
+    void visit(Assignment assignment);
 
     void visit(Print print);
 }
