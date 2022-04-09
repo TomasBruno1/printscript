@@ -1,10 +1,13 @@
 package AST.Node;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodeBlock implements Node {
 
+    @Getter
     private final List<Node> children = new ArrayList<>();
 
     public void addChild(Node child) {
@@ -12,7 +15,8 @@ public class CodeBlock implements Node {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) throws NodeException {
+        visitor.visit(this);
     }
 
     // toString

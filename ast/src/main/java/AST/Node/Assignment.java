@@ -1,16 +1,19 @@
 package AST.Node;
 
-import AST.Expression.Expression;
+import AST.Expression.Function;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 // Assignment expression -> Variable = Expression ;
 @AllArgsConstructor
+@Getter
 public class Assignment implements Node {
     String name;
-    Expression value;
+    Function value;
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) throws NodeException {
+        visitor.visit(this);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package Lexer;
+package Commons;
 
 import lombok.Getter;
 

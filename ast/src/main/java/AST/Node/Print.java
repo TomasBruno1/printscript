@@ -1,14 +1,17 @@
 package AST.Node;
 
-import AST.Expression.Expression;
+import AST.Expression.Function;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class Print implements Node {
-    Expression content;
+    Function content;
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) throws NodeException {
+        visitor.visit(this);
     }
 
     // toString

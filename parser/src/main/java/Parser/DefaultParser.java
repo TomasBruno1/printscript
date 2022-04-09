@@ -2,7 +2,7 @@ package Parser;
 
 import AST.Node.CodeBlock;
 import AST.Node.Node;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.CoreTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.Content;
@@ -20,7 +20,7 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
     }
 
     @Override
-    public Node parse() {
+    public Node parse() throws UnexpectedKeywordException, UnexpectedTokenException {
         CodeBlock program = new CodeBlock();
 
         Content<String> next;
@@ -33,7 +33,11 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
                 } else if (next.getContent().equals("println")) {
                     program.addChild(printParser.parse());
                 } else
-                    throw new IllegalStateException("Unexpected keyword: " + next.getContent());
+                    throw new UnexpectedKeywordException(
+                            next.getContent(),
+                            next.getToken().getRange().getStartCol(),
+                            next.getToken().getRange().getStartLine()
+                    );
             } else {
                 program.addChild(assignmentParser.parse());
             }

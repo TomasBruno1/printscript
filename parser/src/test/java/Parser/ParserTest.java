@@ -3,10 +3,11 @@ package Parser;
 import static org.junit.jupiter.api.Assertions.*;
 
 import AST.Expression.Expression;
-import AST.Expression.ExpressionOptional;
+import AST.Expression.Function;
 import AST.Expression.Operand;
+import AST.Expression.Variable;
 import AST.Node.*;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import java.util.List;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.Test;
 class ParserTest {
 
     @Test
-    public void assignmentParserTestForSingleLiteral() {
+    public void assignmentParserTestForSingleLiteral() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Assignment> parser =
             new AssignmentParser(
                     TokenIterator.Companion.create(
@@ -43,12 +44,12 @@ class ParserTest {
                         )
                     )
             );
-        Assignment assignment = new Assignment("a", new Expression("5", List.of()));
+        Assignment assignment = new Assignment("a", new Variable("5"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
     @Test
-    public void assignmentParserTestForSingleIdentifier() {
+    public void assignmentParserTestForSingleIdentifier() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Assignment> parser =
             new AssignmentParser(
                     TokenIterator.Companion.create(
@@ -75,12 +76,14 @@ class ParserTest {
                         )
                     )
             );
-        Assignment assignment = new Assignment("a", new Expression("b", List.of()));
+        Assignment assignment = new Assignment("a", new Variable("b"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
     @Test
-    public void assignmentParserTestForSingleStringLiteral() {
+    public void assignmentParserTestForSingleStringLiteral()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException {
         Parser<Assignment> parser =
             new AssignmentParser(
                     TokenIterator.Companion.create(
@@ -107,14 +110,14 @@ class ParserTest {
                         )
                     )
             );
-        Assignment assignment = new Assignment("a", new Expression("'a'", List.of()));
+        Assignment assignment = new Assignment("a", new Variable("'a'"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
     @Test
-    public void expressionParserTestForSimpleSum() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+    public void expressionParserTestForSimpleSum() throws UnexpectedTokenException, UnexpectedKeywordException {
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + 3",
                         List.of(
@@ -140,14 +143,14 @@ class ParserTest {
                     )
             );
         Expression expression =
-            new Expression("2", List.of(new ExpressionOptional(Operand.SUM, "3")));
+            new Expression(new Variable("2"), Operand.SUM, new Variable("3"));
         assertEquals(expression.toString(), parser.parse().toString());
     }
 
     @Test
-    public void expressionParserTestForNumberOperation() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+    public void expressionParserTestForNumberOperation() throws UnexpectedTokenException, UnexpectedKeywordException {
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + 3 * 4 - 10 / 5",
                         List.of(
@@ -210,21 +213,27 @@ class ParserTest {
             );
         Expression expression =
             new Expression(
-                    "2",
-                    List.of(
-                        new ExpressionOptional(Operand.SUM, "3"),
-                        new ExpressionOptional(Operand.MUL, "4"),
-                        new ExpressionOptional(Operand.SUB, "10"),
-                        new ExpressionOptional(Operand.DIV, "5")
+                    new Expression(
+                            new Variable("2"),
+                            Operand.SUM,
+                            new Expression(new Variable("3"), Operand.MUL, new Variable("4"))
+                    ),
+                    Operand.SUB,
+                    new Expression(
+                            new Variable("10"),
+                            Operand.DIV,
+                            new Variable("5")
                     )
             );
         assertEquals(expression.toString(), parser.parse().toString());
     }
 
     @Test
-    public void expressionParserTestForNumberAndVariableOperation() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+    public void expressionParserTestForNumberAndVariableOperation()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException {
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + a",
                         List.of(
@@ -250,14 +259,14 @@ class ParserTest {
                     )
             );
         Expression expression =
-            new Expression("2", List.of(new ExpressionOptional(Operand.SUM, "a")));
+            new Expression(new Variable("2"), Operand.SUM, new Variable("a"));
         assertEquals(expression.toString(), parser.parse().toString());
     }
 
     @Test
-    public void expressionParserTestForMixedOperation() {
-        Parser<Expression> parser =
-            new ExpressionParser(
+    public void expressionParserTestForMixedOperation() throws UnexpectedTokenException, UnexpectedKeywordException {
+        Parser<Function> parser =
+            new FunctionParser(
                     TokenIterator.Companion.create(
                         "2 + a * 'hola' - 8",
                         List.of(
@@ -308,18 +317,19 @@ class ParserTest {
             );
         Expression expression =
             new Expression(
-                    "2",
-                    List.of(
-                        new ExpressionOptional(Operand.SUM, "a"),
-                        new ExpressionOptional(Operand.MUL, "'hola'"),
-                        new ExpressionOptional(Operand.SUB, "8")
-                    )
+                    new Expression(
+                            new Variable("2"),
+                            Operand.SUM,
+                            new Expression(new Variable("a"), Operand.MUL, new Variable("'hola'"))
+                    ),
+                    Operand.SUB,
+                    new Variable("8")
             );
         assertEquals(expression.toString(), parser.parse().toString());
     }
 
     @Test
-    public void printParserTest() {
+    public void printParserTest() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Print> parser =
             new PrintParser(
                     TokenIterator.Companion.create(
@@ -352,12 +362,12 @@ class ParserTest {
                         )
                     )
             );
-        Print print = new Print(new Expression("'hola'", List.of()));
+        Print print = new Print(new Variable("'hola'"));
         assertEquals(print.toString(), parser.parse().toString());
     }
 
     @Test
-    public void declarationParserTestForInitialization() {
+    public void declarationParserTestForInitialization() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Declaration> parser =
             new DeclarationParser(
                     TokenIterator.Companion.create(
@@ -401,7 +411,9 @@ class ParserTest {
     }
 
     @Test
-    public void declarationParserTestForInitializationAndAssignment() {
+    public void declarationParserTestForInitializationAndAssignment()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException {
         Parser<Declaration> parser =
             new DeclarationParser(
                     TokenIterator.Companion.create(
@@ -452,12 +464,12 @@ class ParserTest {
                         )
                     )
             );
-        Declaration declaration = new Declaration("a", "number", new Expression("8", List.of()));
+        Declaration declaration = new Declaration("a", "number", new Variable("8"));
         assertEquals(declaration.toString(), parser.parse().toString());
     }
 
     @Test
-    public void defaultParserTestForSimpleCodeBlockTest() {
+    public void defaultParserTestForSimpleCodeBlockTest() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Node> parser =
             new DefaultParser(
                     TokenIterator.Companion.create(
@@ -618,15 +630,15 @@ class ParserTest {
             );
 
         CodeBlock codeBlock = new CodeBlock();
-        codeBlock.addChild(new Declaration("a", "number", new Expression("8", List.of())));
-        codeBlock.addChild(new Declaration("b", "string", new Expression("'8'", List.of())));
+        codeBlock.addChild(new Declaration("a", "number", new Variable("8")));
+        codeBlock.addChild(new Declaration("b", "string", new Variable("'8'")));
         codeBlock.addChild(
             new Assignment(
                     "a",
-                    new Expression("a", List.of(new ExpressionOptional(Operand.SUM, "b")))
+                    new Expression(new Variable("a"), Operand.SUM, new Variable("b"))
             )
         );
-        codeBlock.addChild(new Print(new Expression("a", List.of())));
+        codeBlock.addChild(new Print(new Variable("a")));
         assertEquals(codeBlock.toString(), parser.parse().toString());
     }
 
@@ -646,6 +658,162 @@ class ParserTest {
                         )
                     )
             );
-        assertThrows(IllegalStateException.class, parser::parse);
+        assertThrows(UnexpectedKeywordException.class, parser::parse);
     }
+
+    @Test
+    public void declarationParserWithMissingIdentifierShouldThrowExceptions() {
+        Parser<Declaration> parser =
+            new DeclarationParser(
+                    TokenIterator.Companion.create(
+                        "let :",
+                        List.of(
+                            new Token(
+                                    DefaultTokenTypes.KEYWORD,
+                                    0,
+                                    3,
+                                    new LexicalRange(0, 0, 3, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.SEPARATOR,
+                                    4,
+                                    5,
+                                    new LexicalRange(4, 0, 5, 0)
+                            )
+                        )
+                    )
+            );
+        assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
+    @Test
+    public void declarationParserWithMissingTypeSeparatorShouldThrowExceptions() {
+        Parser<Declaration> parser =
+            new DeclarationParser(
+                    TokenIterator.Companion.create(
+                        "let x number",
+                        List.of(
+                            new Token(
+                                    DefaultTokenTypes.KEYWORD,
+                                    0,
+                                    3,
+                                    new LexicalRange(0, 0, 3, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.IDENTIFIER,
+                                    4,
+                                    5,
+                                    new LexicalRange(4, 0, 5, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.KEYWORD,
+                                    6,
+                                    12,
+                                    new LexicalRange(6, 0, 12, 0)
+                            )
+                        )
+                    )
+            );
+        assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
+    @Test
+    public void declarationParserWithMissingTypeShouldThrowExceptions() {
+        Parser<Declaration> parser =
+            new DeclarationParser(
+                    TokenIterator.Companion.create(
+                        "let x : ;",
+                        List.of(
+                            new Token(
+                                    DefaultTokenTypes.KEYWORD,
+                                    0,
+                                    3,
+                                    new LexicalRange(0, 0, 3, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.IDENTIFIER,
+                                    4,
+                                    5,
+                                    new LexicalRange(4, 0, 5, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.SEPARATOR,
+                                    6,
+                                    7,
+                                    new LexicalRange(6, 0, 7, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.SEPARATOR,
+                                    8,
+                                    9,
+                                    new LexicalRange(8, 0, 9, 0)
+                            )
+                        )
+                    )
+            );
+        assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
+    @Test
+    public void printParserWithMissingLeftParenthesisShouldThrowException() {
+        Parser<Print> parser =
+            new PrintParser(
+                    TokenIterator.Companion.create(
+                        "println 'hola')",
+                        List.of(
+                            new Token(
+                                    DefaultTokenTypes.KEYWORD,
+                                    0,
+                                    7,
+                                    new LexicalRange(0, 0, 7, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.LITERAL,
+                                    8,
+                                    14,
+                                    new LexicalRange(8, 0, 14, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.SEPARATOR,
+                                    14,
+                                    15,
+                                    new LexicalRange(14, 0, 15, 0)
+                            )
+                        )
+                    )
+            );
+        assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
+    @Test
+    public void printParserWithMissingRightParenthesisShouldThrowException() {
+        Parser<Print> parser =
+            new PrintParser(
+                    TokenIterator.Companion.create(
+                        "println('hola'",
+                        List.of(
+                            new Token(
+                                    DefaultTokenTypes.KEYWORD,
+                                    0,
+                                    7,
+                                    new LexicalRange(0, 0, 7, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.SEPARATOR,
+                                    7,
+                                    8,
+                                    new LexicalRange(7, 0, 8, 0)
+                            ),
+                            new Token(
+                                    DefaultTokenTypes.LITERAL,
+                                    8,
+                                    14,
+                                    new LexicalRange(8, 0, 14, 0)
+                            )
+                        )
+                    )
+            );
+        assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
 }

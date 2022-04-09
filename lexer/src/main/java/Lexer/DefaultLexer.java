@@ -10,7 +10,7 @@ public class DefaultLexer implements Lexer {
     private final Tokenizer tokenizer = new DefaultTokenizer();
 
     @Override
-    public List<Token> lex(ContentProvider provider) {
+    public List<Token> lex(ContentProvider provider) throws UnknownTokenException, UnclosedStringLiteralException {
         String input = provider.getContent();
         List<Token> tokens = new ArrayList<>();
 
@@ -25,6 +25,8 @@ public class DefaultLexer implements Lexer {
             while (i < length - 1) {
                 if (currentChar == '"' || currentChar == '\'') {
                     int nextQuoteMark = getNextQuoteMark(input, currentChar, i);
+                    if (nextQuoteMark == -1)
+                        throw new UnclosedStringLiteralException(col, row);
                     currentString.append(input, i + 1, i + nextQuoteMark + 2);
                     i = i + nextQuoteMark + 1;
                     col = col + nextQuoteMark + 1;
@@ -67,13 +69,9 @@ public class DefaultLexer implements Lexer {
         return tokens;
     }
 
-    private int getNextQuoteMark(String input, char currentChar, int i) {
-        int nextQuoteMark =
-            currentChar == '"'
-                ? (input.substring(i + 1)).indexOf('"')
-                : (input.substring(i + 1)).indexOf('\'');
-        if (nextQuoteMark == -1)
-            throw new IllegalArgumentException("Unclosed string literal");
-        return nextQuoteMark;
+    private int getNextQuoteMark(String input, char currentChar, int i) throws UnclosedStringLiteralException {
+        return currentChar == '"'
+            ? (input.substring(i + 1)).indexOf('"')
+            : (input.substring(i + 1)).indexOf('\'');
     }
 }

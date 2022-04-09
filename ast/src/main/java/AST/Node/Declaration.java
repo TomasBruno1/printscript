@@ -1,14 +1,16 @@
 package AST.Node;
 
-import AST.Expression.Expression;
+import AST.Expression.Function;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class Declaration implements Node {
     String varName;
     String type;
 
-    Expression value;
+    Function value;
 
     public Declaration(String varName, String type) {
         this.varName = varName;
@@ -16,7 +18,8 @@ public class Declaration implements Node {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) throws NodeException {
+        visitor.visit(this);
     }
 
     @Override

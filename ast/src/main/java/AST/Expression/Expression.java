@@ -1,23 +1,52 @@
 package AST.Expression;
 
-import AST.Node.Node;
+import AST.Node.NodeException;
 import AST.Node.NodeVisitor;
-import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
-public class Expression implements Node {
+@Getter
+public class Expression implements Function {
 
-    String value;
+    Function left;
+    Operand operand;
+    Function right;
 
-    List<ExpressionOptional> exprOpts;
+    public Expression(String value) {
+        this.left = new Variable(value);
+    }
 
     @Override
     public void accept(NodeVisitor visitor) {
     }
 
     @Override
+    public void accept(ExpressionVisitor visitor) throws NodeException {
+        visitor.visitExpression(this);
+    }
+
+    public Function addVariable(Operand operand, Variable variable) {
+        if (operand == Operand.SUB || operand == Operand.SUM) {
+            return new Expression(this, operand, variable);
+        } else {
+            Function right = new Expression(this.right, operand, variable);
+            return new Expression(left, this.operand, right);
+        }
+    }
+
+    // toString
+    @Override
     public String toString() {
-        return "Expression(" + "value='" + value + '\'' + ", exprOpts=" + exprOpts + ')';
+        String sb = "("
+            + left.toString()
+            + ")"
+            +
+            operand
+            +
+            "("
+            + right
+            + ")";
+        return sb;
     }
 }

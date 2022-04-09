@@ -1,24 +1,36 @@
 package Parser;
 
-import AST.Expression.Expression;
+import AST.Expression.Function;
 import AST.Node.Print;
-import Lexer.DefaultTokenTypes;
+import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
 
 public class PrintParser extends TokenConsumer implements Parser<Print> {
-    private final ExpressionParser expressionParser = new ExpressionParser(getStream());
+    private final FunctionParser expressionParser = new FunctionParser(getStream());
 
     public PrintParser(@NotNull TokenIterator stream) {
         super(stream);
     }
 
     @Override
-    public Print parse() {
+    public Print parse() throws UnexpectedTokenException {
         consume(DefaultTokenTypes.KEYWORD, "println");
+        if (peek(DefaultTokenTypes.SEPARATOR, "(") == null)
+            throw new UnexpectedTokenException(
+                    "(",
+                    current().getRange().getStartCol(),
+                    current().getRange().getStartLine()
+            );
         consume(DefaultTokenTypes.SEPARATOR, "(");
-        Expression content = expressionParser.parse();
+        Function content = expressionParser.parse();
+        if (peek(DefaultTokenTypes.SEPARATOR, ")") == null)
+            throw new UnexpectedTokenException(
+                    ")",
+                    current().getRange().getStartCol(),
+                    current().getRange().getStartLine()
+            );
         consume(DefaultTokenTypes.SEPARATOR, ")");
         return new Print(content);
     }
