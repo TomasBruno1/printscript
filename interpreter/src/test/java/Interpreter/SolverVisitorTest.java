@@ -3,6 +3,7 @@ package Interpreter;
 import AST.Expression.Expression;
 import AST.Expression.Operand;
 import AST.Expression.Variable;
+import AST.Node.NodeException;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SolverVisitorTest {
 
     @Test
-    public void test001_WhenReceivingSimpleAdditionShouldReturnCorrectResult() {
+    public void test001_WhenReceivingSimpleAdditionShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(new Variable("1"), Operand.SUM, new Variable("2"));
         String expected = "3";
         SolverVisitor visitor = new SolverVisitor();
@@ -22,7 +23,8 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test002_WhenReceivingAdditionAndMultiplicationOperationShouldReturnCorrectResult() {
+    public void test002_WhenReceivingAdditionAndMultiplicationOperationShouldReturnCorrectResult()
+            throws NodeException {
         Expression input = new Expression(
                 new Variable("1"),
                 Operand.SUM,
@@ -36,7 +38,7 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test003_WhenReceivingComplexNumericalOperationShouldReturnCorrectResult() {
+    public void test003_WhenReceivingComplexNumericalOperationShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(
                 new Expression(new Variable("5"), Operand.DIV, new Variable("2")),
                 Operand.SUM,
@@ -54,7 +56,7 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test004_WhenReceivingSimpleNumberAndVariableOperationShouldReturnCorrectResult() {
+    public void test004_WhenReceivingSimpleNumberAndVariableOperationShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(new Variable("aNumber"), Operand.SUM, new Variable("2"));
         String expected = "7";
 
@@ -68,7 +70,7 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test005_WhenReceivingComplexNumberAndVariableOperationShouldReturnCorrectResult() {
+    public void test005_WhenReceivingComplexNumberAndVariableOperationShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(
                 new Expression(new Variable("aNumber"), Operand.DIV, new Variable("2")),
                 Operand.SUM,
@@ -91,7 +93,7 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test006_WhenReceivingStringConcatenationShouldReturnCorrectResult() {
+    public void test006_WhenReceivingStringConcatenationShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(new Variable("'Hello'"), Operand.SUM, new Variable("\" world!\""));
         String expected = "\"Hello world!\"";
         SolverVisitor visitor = new SolverVisitor();
@@ -101,7 +103,7 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test007_WhenReceivingStringConcatenationWithVariableShouldReturnCorrectResult() {
+    public void test007_WhenReceivingStringConcatenationWithVariableShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(
                 new Variable("'Hello'"),
                 Operand.SUM,
@@ -119,7 +121,7 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test008_WhenReceivingStringConcatenationWithNumberShouldReturnCorrectResult() {
+    public void test008_WhenReceivingStringConcatenationWithNumberShouldReturnCorrectResult() throws NodeException {
         Expression input = new Expression(
                 new Variable("'Hello'"),
                 Operand.SUM,
@@ -133,7 +135,8 @@ class SolverVisitorTest {
     }
 
     @Test
-    public void test009_WhenReceivingStringsNumbersAndVariablesOperationShouldReturnCorrectResult() {
+    public void test009_WhenReceivingStringsNumbersAndVariablesOperationShouldReturnCorrectResult()
+            throws NodeException {
         Expression input = new Expression(
                 new Expression(new Variable("'Hello'"), Operand.SUM, new Variable("\" world!\"")),
                 Operand.SUM,

@@ -52,7 +52,8 @@ public class SolverVisitor implements ExpressionVisitor {
             || (leftResult.matches(stringRegex) && rightResult.matches(stringRegex));
     }
 
-    private String stringOperation(String leftResult, String rightResult, Operand operand) throws InvalidOperationException {
+    private String stringOperation(String leftResult, String rightResult, Operand operand)
+            throws InvalidOperationException {
         if (operand != Operand.SUM)
             throw new InvalidOperationException(leftResult, rightResult, operand);
         String left = leftResult.replaceAll("[\"']", "");
@@ -94,7 +95,8 @@ public class SolverVisitor implements ExpressionVisitor {
     @Override
     public void visitVariable(Variable variable) throws NodeException {
         result = variables.containsKey(variable.getValue()) ? variables.get(variable.getValue()) : variable.getValue();
-        if (!result.matches(numberRegex) && !result.matches(stringRegex)) throw new UndeclaredVariableException(variable.getValue());
+        if (!result.matches(numberRegex) && !result.matches(stringRegex))
+            throw new UndeclaredVariableException(variable.getValue());
     }
 
     private String getResult(Function function) throws NodeException {

@@ -17,10 +17,20 @@ public class PrintParser extends TokenConsumer implements Parser<Print> {
     @Override
     public Print parse() throws UnexpectedTokenException {
         consume(DefaultTokenTypes.KEYWORD, "println");
-        if(peek(DefaultTokenTypes.SEPARATOR, "(") == null) throw new UnexpectedTokenException("(", current().getRange().getStartCol(), current().getRange().getStartLine());
+        if (peek(DefaultTokenTypes.SEPARATOR, "(") == null)
+            throw new UnexpectedTokenException(
+                    "(",
+                    current().getRange().getStartCol(),
+                    current().getRange().getStartLine()
+            );
         consume(DefaultTokenTypes.SEPARATOR, "(");
         Function content = expressionParser.parse();
-        if(peek(DefaultTokenTypes.SEPARATOR, ")") == null) throw new UnexpectedTokenException(")", current().getRange().getStartCol(), current().getRange().getStartLine());
+        if (peek(DefaultTokenTypes.SEPARATOR, ")") == null)
+            throw new UnexpectedTokenException(
+                    ")",
+                    current().getRange().getStartCol(),
+                    current().getRange().getStartLine()
+            );
         consume(DefaultTokenTypes.SEPARATOR, ")");
         return new Print(content);
     }

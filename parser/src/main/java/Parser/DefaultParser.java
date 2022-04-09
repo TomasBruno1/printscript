@@ -33,7 +33,11 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
                 } else if (next.getContent().equals("println")) {
                     program.addChild(printParser.parse());
                 } else
-                    throw new UnexpectedKeywordException(next.getContent(), next.getToken().getRange().getStartCol(), next.getToken().getRange().getStartLine());
+                    throw new UnexpectedKeywordException(
+                            next.getContent(),
+                            next.getToken().getRange().getStartCol(),
+                            next.getToken().getRange().getStartLine()
+                    );
             } else {
                 program.addChild(assignmentParser.parse());
             }

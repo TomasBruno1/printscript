@@ -3,10 +3,7 @@ package Interpreter;
 import AST.Expression.Expression;
 import AST.Expression.Operand;
 import AST.Expression.Variable;
-import AST.Node.Assignment;
-import AST.Node.CodeBlock;
-import AST.Node.Declaration;
-import AST.Node.Print;
+import AST.Node.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InterpreterVisitorTest {
 
     @Test
-    public void test001_WhenVisitingAPrintStatementThenItShouldBeWrittenToResult() {
+    public void test001_WhenVisitingAPrintStatementThenItShouldBeWrittenToResult() throws NodeException {
         InterpreterVisitor visitor = new InterpreterVisitor();
         Print printStatement = new Print(new Variable("45"));
         printStatement.accept(visitor);
@@ -22,7 +19,7 @@ class InterpreterVisitorTest {
     }
 
     @Test
-    public void test002_WhenVisitingAPrintStatementWithAnExpressionThenItsResultShouldBeWritten() {
+    public void test002_WhenVisitingAPrintStatementWithAnExpressionThenItsResultShouldBeWritten() throws NodeException {
         InterpreterVisitor visitor = new InterpreterVisitor();
         Print printStatement = new Print(new Expression(new Variable("45"), Operand.SUM, new Variable("5")));
         printStatement.accept(visitor);
@@ -30,7 +27,8 @@ class InterpreterVisitorTest {
     }
 
     @Test
-    public void test003_WhenVisitingAPrintStatementWithAMixedExpressionThenItsResultShouldBeWritten() {
+    public void test003_WhenVisitingAPrintStatementWithAMixedExpressionThenItsResultShouldBeWritten()
+            throws NodeException {
         InterpreterVisitor visitor = new InterpreterVisitor();
         Print printStatement = new Print(
                 new Expression(
@@ -44,7 +42,7 @@ class InterpreterVisitorTest {
     }
 
     @Test
-    public void test004_WhenReceivingFullCodeBlockThenPrintStatementsShouldBeWrittenToResult() {
+    public void test004_WhenReceivingFullCodeBlockThenPrintStatementsShouldBeWrittenToResult() throws NodeException {
         InterpreterVisitor visitor = new InterpreterVisitor();
         CodeBlock program = new CodeBlock();
         program.addChild(new Print(new Variable("45")));

@@ -75,7 +75,9 @@ public class App {
         return tokens;
     }
 
-    private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens) throws UnexpectedKeywordException, UnexpectedTokenException {
+    private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens)
+            throws UnexpectedKeywordException,
+                UnexpectedTokenException {
         Parser<Node> parser = new DefaultParser(TokenIterator.create(aContentProvider.getContent(), tokens));
         TaskProgressPrinter.printStart(Task.Parsing);
         timer.start();

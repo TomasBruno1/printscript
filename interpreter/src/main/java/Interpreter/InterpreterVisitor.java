@@ -3,7 +3,6 @@ package Interpreter;
 import AST.Expression.Function;
 import AST.Node.*;
 import lombok.Getter;
-import lombok.SneakyThrows;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +47,7 @@ public class InterpreterVisitor implements NodeVisitor {
     }
 
     @Override
-    public void visit(Assignment assignment) throws NodeException{
+    public void visit(Assignment assignment) throws NodeException {
         String name = assignment.getName();
         Function value = assignment.getValue();
         value.accept(solverVisitor);
