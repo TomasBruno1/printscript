@@ -12,7 +12,7 @@ public class Assignment implements Node {
     Function value;
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) throws NodeException {
         visitor.visit(this);
     }
 

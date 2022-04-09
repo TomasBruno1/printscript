@@ -1,7 +1,9 @@
 package AST.Expression;
 
-public interface ExpressionVisitor {
-    void visitExpression(Expression expression);
+import AST.Node.NodeException;
 
-    void visitVariable(Variable variable);
+public interface ExpressionVisitor {
+    void visitExpression(Expression expression) throws NodeException;
+
+    void visitVariable(Variable variable) throws NodeException;
 }

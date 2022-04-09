@@ -1,6 +1,7 @@
 package Interpreter;
 
 import AST.Expression.*;
+import AST.Node.NodeException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ public class SolverVisitor implements ExpressionVisitor {
 
     private Map<String, String> variables = new HashMap<>();
 
+    private final String stringRegex = "\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'";
     private final String numberRegex = "-?[0-9]{1,9}(\\.[0-9]*)?";
 
     public SolverVisitor(Map<String, String> variables) {
@@ -22,7 +24,7 @@ public class SolverVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public void visitExpression(Expression expression) {
+    public void visitExpression(Expression expression) throws NodeException {
         Operand operand = expression.getOperand();
         String leftResult = getResult(expression.getLeft());
         String rightResult = getResult(expression.getRight());
@@ -45,20 +47,14 @@ public class SolverVisitor implements ExpressionVisitor {
     }
 
     private boolean isStringOperation(String leftResult, String rightResult) {
-        String stringRegex = "\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'";
         return (leftResult.matches(stringRegex) && rightResult.matches(numberRegex))
             || ((leftResult.matches(numberRegex) && rightResult.matches(stringRegex)))
             || (leftResult.matches(stringRegex) && rightResult.matches(stringRegex));
     }
 
-    private String stringOperation(String leftResult, String rightResult, Operand operand) {
+    private String stringOperation(String leftResult, String rightResult, Operand operand) throws InvalidOperationException {
         if (operand != Operand.SUM)
-            throw new RuntimeException("String operations can only be SUM");
-        if (
-            (leftResult.charAt(0) != '\'' && leftResult.charAt(0) != '"')
-                && (rightResult.charAt(0) != '\'' && rightResult.charAt(0) != '"')
-        )
-            throw new RuntimeException("Undefined identifier");
+            throw new InvalidOperationException(leftResult, rightResult, operand);
         String left = leftResult.replaceAll("[\"']", "");
         String right = rightResult.replaceAll("[\"']", "");
         return "\"" + left + right + "\"";
@@ -96,11 +92,12 @@ public class SolverVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public void visitVariable(Variable variable) {
+    public void visitVariable(Variable variable) throws NodeException {
         result = variables.containsKey(variable.getValue()) ? variables.get(variable.getValue()) : variable.getValue();
+        if (!result.matches(numberRegex) && !result.matches(stringRegex)) throw new UndeclaredVariableException(variable.getValue());
     }
 
-    private String getResult(Function function) {
+    private String getResult(Function function) throws NodeException {
         function.accept(this);
         return result;
     }

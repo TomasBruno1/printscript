@@ -1,7 +1,9 @@
 package Interpreter;
 
-public class UndeclaredVariableException extends RuntimeException {
-    public UndeclaredVariableException(String message) {
-        super(message);
+import AST.Node.NodeException;
+
+public class UndeclaredVariableException extends NodeException {
+    public UndeclaredVariableException(String name) {
+        super("Undeclared variable: " + name);
     }
 }

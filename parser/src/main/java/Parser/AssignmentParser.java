@@ -17,8 +17,10 @@ public class AssignmentParser extends TokenConsumer implements Parser<Assignment
     }
 
     @Override
-    public Assignment parse() {
+    public Assignment parse() throws UnexpectedTokenException {
+        if (peek(DefaultTokenTypes.IDENTIFIER) == null) throw new UnexpectedTokenException("identifier", current().getRange().getStartCol(), current().getRange().getStartLine());
         String variable = consume(DefaultTokenTypes.IDENTIFIER).getContent();
+        if(peek(DefaultTokenTypes.ASSIGN) == null) throw new UnexpectedTokenException("=", current().getRange().getStartCol(), current().getRange().getStartLine());
         consume(DefaultTokenTypes.ASSIGN);
         Function function = expressionParser.parse();
         return new Assignment(variable, function);

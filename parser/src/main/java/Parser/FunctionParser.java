@@ -14,13 +14,15 @@ public class FunctionParser extends TokenConsumer implements Parser<Function> {
     }
 
     @Override
-    public Function parse() {
+    public Function parse() throws UnexpectedTokenException {
+        if(peekAny(DefaultTokenTypes.IDENTIFIER, DefaultTokenTypes.LITERAL) == null) throw new UnexpectedTokenException("identifier/literal", current().getRange().getStartCol(), current().getRange().getStartLine());
         String value = consumeAny(DefaultTokenTypes.IDENTIFIER, DefaultTokenTypes.LITERAL).getContent();
         if (peek(DefaultTokenTypes.OPERATOR) == null)
             return new Variable(value);
         Function result = new Variable(value);
         while (peek(DefaultTokenTypes.OPERATOR) != null) {
             Operand operand = Operand.getOperand(consume(DefaultTokenTypes.OPERATOR).getContent());
+            if(peekAny(DefaultTokenTypes.IDENTIFIER, DefaultTokenTypes.LITERAL) == null) throw new UnexpectedTokenException("identifier/literal", current().getRange().getStartCol(), current().getRange().getStartLine());
             String next = consumeAny(DefaultTokenTypes.IDENTIFIER, DefaultTokenTypes.LITERAL).getContent();
             result = result.addVariable(operand, new Variable(next));
         }

@@ -3,6 +3,7 @@ package Interpreter;
 import AST.Expression.Function;
 import AST.Node.*;
 import lombok.Getter;
+import lombok.SneakyThrows;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +18,21 @@ public class InterpreterVisitor implements NodeVisitor {
     final Map<String, String> varTypes = new HashMap<>();
 
     @Override
-    public void visit(CodeBlock codeBlock) {
-        codeBlock.getChildren().forEach(node -> node.accept(this));
+    public void visit(CodeBlock codeBlock) throws NodeException {
+        for (Node child : codeBlock.getChildren()) {
+            child.accept(this);
+        }
     }
 
     @Override
-    public void visit(Declaration declaration) {
+    public void visit(Declaration declaration) throws NodeException {
         String type = declaration.getType();
         String name = declaration.getVarName();
         Function function = declaration.getValue();
         solverVisitor.declareVariable(name);
         if (function != null) {
             function.accept(solverVisitor);
-            checkType(type);
+            checkType(name, type);
             solverVisitor.assignVariable(name);
         }
 
@@ -45,33 +48,33 @@ public class InterpreterVisitor implements NodeVisitor {
     }
 
     @Override
-    public void visit(Assignment assignment) {
+    public void visit(Assignment assignment) throws NodeException{
         String name = assignment.getName();
         Function value = assignment.getValue();
         value.accept(solverVisitor);
 
         String type = varTypes.get(name);
         if (type == null) {
-            throw new UndeclaredVariableException("Variable " + name + " is not declared");
+            throw new UndeclaredVariableException(name);
         }
 
-        checkType(type);
+        checkType(name, type);
 
         solverVisitor.assignVariable(name);
     }
 
-    private void checkType(String type) {
+    private void checkType(String name, String type) throws TypeMismatchException {
         if (type.equals("number")) {
             if (!isNumber(solverVisitor.getResult()))
-                throw new TypeMismatchException();
+                throw new TypeMismatchException(name, type);
         } else if (type.equals("string")) {
             if (!isString(solverVisitor.getResult()))
-                throw new TypeMismatchException();
+                throw new TypeMismatchException(name, type);
         }
     }
 
     @Override
-    public void visit(Print print) {
+    public void visit(Print print) throws NodeException {
         print.getContent().accept(solverVisitor);
         String result = solverVisitor.getResult().replaceAll("[\"']", "");
         this.result.write(result);

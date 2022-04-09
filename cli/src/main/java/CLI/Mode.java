@@ -1,8 +1,8 @@
 package CLI;
 
 public enum Mode {
-    Interpretation("interpretation"),
-    Validation("validation");
+    Interpretation("I"),
+    Validation("V");
 
     private final String mode;
 

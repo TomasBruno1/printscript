@@ -18,7 +18,7 @@ public class Declaration implements Node {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
+    public void accept(NodeVisitor visitor) throws NodeException {
         visitor.visit(this);
     }
 

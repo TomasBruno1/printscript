@@ -1,13 +1,19 @@
 package CLI;
 
 import AST.Node.Node;
+import AST.Node.NodeException;
 import ContentProvider.ContentProvider;
 import ContentProvider.FileContentProvider;
+import Interpreter.Interpreter;
+import Interpreter.Writer;
 import Lexer.DefaultLexer;
 import Lexer.Lexer;
 import Lexer.UnknownTokenException;
+import Lexer.UnclosedStringLiteralException;
 import Parser.DefaultParser;
 import Parser.Parser;
+import Parser.UnexpectedKeywordException;
+import Parser.UnexpectedTokenException;
 import com.github.lalyos.jfiglet.FigletFont;
 import lombok.SneakyThrows;
 import org.austral.ingsis.printscript.common.Token;
@@ -42,12 +48,6 @@ public class App {
             }
         }
 
-        try {
-            file = getFile("testeo.txt");
-        } catch (IOException ignored) {
-        }
-        mode = "interpretation";
-
         ContentProvider aContentProvider = new FileContentProvider(file);
 
         try {
@@ -58,13 +58,14 @@ public class App {
                 executeInterpretationTask(timer, root);
             else if (mode.equals(Mode.Validation.getMode()))
                 executeValidationTask(timer, root);
-        } catch (UnknownTokenException e) {
+        } catch (Throwable e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
 
     private static List<Token> executeLexerTask(Timer timer, ContentProvider aContentProvider)
-            throws UnknownTokenException {
+            throws UnknownTokenException,
+                UnclosedStringLiteralException {
         Lexer lexer = new DefaultLexer();
         TaskProgressPrinter.printStart(Task.Lexing);
         timer.start();
@@ -74,7 +75,7 @@ public class App {
         return tokens;
     }
 
-    private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens) {
+    private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens) throws UnexpectedKeywordException, UnexpectedTokenException {
         Parser<Node> parser = new DefaultParser(TokenIterator.create(aContentProvider.getContent(), tokens));
         TaskProgressPrinter.printStart(Task.Parsing);
         timer.start();
@@ -84,20 +85,21 @@ public class App {
         return root;
     }
 
-    private static void executeInterpretationTask(Timer timer, Node root) {
+    private static void executeInterpretationTask(Timer timer, Node root) throws NodeException {
+        Interpreter interpreter = new Interpreter();
         TaskProgressPrinter.printStart(Task.Interpretation);
         timer.start();
-        // todo implement interpretation
-        System.out.println(root.toString());
+        Writer writer = interpreter.run(root);
+        System.out.println(writer.read());
         timer.stop();
         TaskProgressPrinter.printEnd(Task.Interpretation, timer);
     }
 
-    private static void executeValidationTask(Timer timer, Node root) {
+    private static void executeValidationTask(Timer timer, Node root) throws NodeException {
+        Interpreter interpreter = new Interpreter();
         TaskProgressPrinter.printStart(Task.Validation);
         timer.start();
-        // todo implement validation
-        System.out.println(root.toString());
+        interpreter.run(root);
         timer.stop();
         TaskProgressPrinter.printEnd(Task.Validation, timer);
     }

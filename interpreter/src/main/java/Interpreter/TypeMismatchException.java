@@ -1,4 +1,9 @@
 package Interpreter;
 
-public class TypeMismatchException extends RuntimeException {
+import AST.Node.NodeException;
+
+public class TypeMismatchException extends NodeException {
+    public TypeMismatchException(String name, String type) {
+        super("Type mismatch: " + name + " is of type " + type);
+    }
 }

@@ -1,5 +1,6 @@
 package AST.Expression;
 
+import AST.Node.NodeException;
 import AST.Node.NodeVisitor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class Expression implements Function {
     }
 
     @Override
-    public void accept(ExpressionVisitor visitor) {
+    public void accept(ExpressionVisitor visitor) throws NodeException {
         visitor.visitExpression(this);
     }
 

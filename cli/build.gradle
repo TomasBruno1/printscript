@@ -12,4 +12,5 @@ dependencies {
     implementation project(':lexer')
     implementation project(':parser')
     implementation project(':ast')
+    implementation project(':interpreter')
 }
