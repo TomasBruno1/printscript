@@ -1,6 +1,9 @@
 # printscript
 Parser project for Ing-Sis at Universidad Austral.
 
+## Prerequisites
+- JDK 1.11
+
 ## Usage
 Running ` build gradle ` builds the projects, runs formatter and linter, and runs tests generating a code-coverage report.
 
