@@ -1,0 +1,32 @@
+
+Terminales:
+StringLiteral | NumberLiteral | Identifier | Keyword | Separator | Operator
+
+No Terminales:
+Declaration | Assignment | PrintLn | Expr | Literal
+
+Declaration -> Keyword Identifier Separator Keyword Separator | Keyword Identifier Separator Keyword Operator Expr Separator
+Assignment -> Identifier Operator Expr Separator
+PrintLn -> Keyword Separator Expr Separator Separator
+Literal -> StringLiteral | NumberLiteral
+Expr -> Literal ExprOpt* | Identifier ExprOpt*
+ExprOpt -> Operator Expr
+
+Ejemplos:
+
+let var: number = 5;
+let var2: string = "hola";
+let var3: number;
+
+var3 = var * 2;
+
+println(var2 + var3); -> print hola10
+println(var2 + " mundo"); -> print hola mundo
+println('azala'); -> print azala
+
+
+expr -> NUM exprOpt*
+exprOpt -> [+-*] NUM
+-_- +.+ -.- *.*
+case class Expr(num: Int, exprOpts: Seq[ExprOpt])
+case class ExprOpt(op: String, num: Int)

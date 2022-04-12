@@ -1,9 +1,14 @@
 let x: number = 5;
 println(x);
-let y: number;
+let
+    y
+        :
+            number
+                    ;
 y = 2 * x;
 println(y);
 println(x+y+100);
 println(x + y / 2 + "hello");
 let z: string = "hello ";
 println(z + 1 + " world!");
+println(2 + 3 * 2 - 4 + 6/3);
