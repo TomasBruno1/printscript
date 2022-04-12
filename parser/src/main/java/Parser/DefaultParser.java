@@ -41,6 +41,7 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
             } else {
                 program.addChild(assignmentParser.parse());
             }
+            if(peek(DefaultTokenTypes.SEPARATOR, ";") == null) throw new UnexpectedTokenException(";", current().getRange().getStartCol(), current().getRange().getStartLine());
             consume(DefaultTokenTypes.SEPARATOR, ";");
         }
 
