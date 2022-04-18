@@ -74,15 +74,16 @@ public class App {
     }
 
     private static Tokenizer getTokenizer(String version) {
-        if(version.equals("1.0")) return new TokenizerV1_0();
-        if(version.equals("1.1")) return new TokenizerV1_1();
+        if (version.equals("1.0"))
+            return new TokenizerV1_0();
+        if (version.equals("1.1"))
+            return new TokenizerV1_1();
         return null;
     }
 
     private static List<Token> executeLexerTask(Timer timer, ContentProvider aContentProvider, Tokenizer tokenizer)
             throws UnknownTokenException,
                 UnclosedStringLiteralException {
-
         Lexer lexer = new DefaultLexer(tokenizer);
         TaskProgressPrinter.printStart(Task.Lexing);
         timer.start();
@@ -143,9 +144,10 @@ public class App {
             throw new IOException("Invalid mode");
     }
 
-    //TODO enum brts
+    // TODO enum brts
     private static void checkVersion(String version) throws IOException {
-        if (!(version.equals("1.0") || version.equals("1.1"))) throw new IOException("Invalid version");
+        if (!(version.equals("1.0") || version.equals("1.1")))
+            throw new IOException("Invalid version");
     }
 
     @SneakyThrows

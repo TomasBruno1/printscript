@@ -13,7 +13,8 @@ import org.austral.ingsis.printscript.common.Token;
 public abstract class AbstractTokenizer implements Tokenizer {
 
     @Override
-    public final Token tokenize(String currentString, int from, int fromCol, int col, int row) throws UnknownTokenException {
+    public final Token tokenize(String currentString, int from, int fromCol, int col, int row)
+            throws UnknownTokenException {
         DefaultTokenTypes type = getType(currentString);
         if (type == null)
             throw new UnknownTokenException(currentString, fromCol, row);
