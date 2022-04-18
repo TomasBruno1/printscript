@@ -8,6 +8,9 @@ import Interpreter.Interpreter;
 import Interpreter.Writer;
 import Lexer.DefaultLexer;
 import Lexer.Lexer;
+import Lexer.Tokenizer;
+import Lexer.TokenizerV1_0;
+import Lexer.TokenizerV1_1;
 import Lexer.UnknownTokenException;
 import Lexer.UnclosedStringLiteralException;
 import Parser.DefaultParser;
@@ -29,6 +32,8 @@ import java.util.stream.Collectors;
 public class App {
     public static void main(String[] args) {
         String mode = "";
+        String version = "";
+        Tokenizer tokenizer = null;
         File file = null;
         boolean isValid = false;
         printHeader();
@@ -42,6 +47,11 @@ public class App {
                 checkMode(mode);
                 System.out.println("Selected mode: " + mode);
                 printSpaces(2);
+                version = askForString("Insert version: ");
+                checkVersion(version);
+
+                tokenizer = getTokenizer(version);
+
                 isValid = true;
             } catch (IOException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -52,7 +62,7 @@ public class App {
 
         try {
             Timer timer = new Timer();
-            List<Token> tokens = executeLexerTask(timer, aContentProvider);
+            List<Token> tokens = executeLexerTask(timer, aContentProvider, tokenizer);
             Node root = executeParserTask(timer, aContentProvider, tokens);
             if (mode.equals(Mode.Interpretation.getMode()))
                 executeInterpretationTask(timer, root);
@@ -63,10 +73,17 @@ public class App {
         }
     }
 
-    private static List<Token> executeLexerTask(Timer timer, ContentProvider aContentProvider)
+    private static Tokenizer getTokenizer(String version) {
+        if(version.equals("1.0")) return new TokenizerV1_0();
+        if(version.equals("1.1")) return new TokenizerV1_1();
+        return null;
+    }
+
+    private static List<Token> executeLexerTask(Timer timer, ContentProvider aContentProvider, Tokenizer tokenizer)
             throws UnknownTokenException,
                 UnclosedStringLiteralException {
-        Lexer lexer = new DefaultLexer();
+
+        Lexer lexer = new DefaultLexer(tokenizer);
         TaskProgressPrinter.printStart(Task.Lexing);
         timer.start();
         List<Token> tokens = lexer.lex(aContentProvider);
@@ -124,6 +141,11 @@ public class App {
         List<String> options = Arrays.stream(Mode.values()).map(Mode::getMode).collect(Collectors.toList());
         if (!options.contains(mode))
             throw new IOException("Invalid mode");
+    }
+
+    //TODO enum brts
+    private static void checkVersion(String version) throws IOException {
+        if (!(version.equals("1.0") || version.equals("1.1"))) throw new IOException("Invalid version");
     }
 
     @SneakyThrows

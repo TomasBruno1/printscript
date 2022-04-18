@@ -10,10 +10,10 @@ import Commons.Separator;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 
-public class DefaultTokenizer implements Tokenizer {
+public abstract class AbstractTokenizer implements Tokenizer {
 
     @Override
-    public Token tokenize(String currentString, int from, int fromCol, int col, int row) throws UnknownTokenException {
+    public final Token tokenize(String currentString, int from, int fromCol, int col, int row) throws UnknownTokenException {
         DefaultTokenTypes type = getType(currentString);
         if (type == null)
             throw new UnknownTokenException(currentString, fromCol, row);
@@ -45,8 +45,8 @@ public class DefaultTokenizer implements Tokenizer {
         return type;
     }
 
-    private boolean isKeyword(String currentString) {
-        return Arrays.stream(Keyword.values())
+    protected boolean isKeyword(String currentString) {
+        return Arrays.stream(Keyword.V1_0.values())
             .map(Keyword::getKeyword)
             .collect(Collectors.toList())
             .contains(currentString);

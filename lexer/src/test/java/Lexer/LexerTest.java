@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class LexerTest {
 
-    Lexer lexer = new DefaultLexer();
+    Lexer lexer = new DefaultLexer(new TokenizerV1_0());
 
     // + - * / ( ) =
     @Test
