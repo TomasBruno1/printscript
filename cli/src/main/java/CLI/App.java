@@ -41,16 +41,32 @@ public class App {
         printHeader();
         while (!isValid) {
             try {
-                String filename = askForString("Insert file name: ");
-                file = getFile(filename);
+                String filename;
+                if(file == null){
+                    filename = askForString("Insert file name: ");
+                    file = getFile(filename);
+                }
+                if(!checkFile(file)){
+                    file = null;
+                    throw new IOException("File not found");
+                }
                 System.out.println("File found: " + file.getAbsolutePath());
                 printSpaces(2);
-                mode = askForString("Insert execution mode (interpretation or validation): ");
-                checkMode(mode);
+                if(mode.equals("")) mode = askForString("Insert execution mode (interpretation or validation): ");
+                if (!checkMode(mode)){
+                    mode = "";
+                    throw new IOException("Invalid mode");
+                }
                 System.out.println("Selected mode: " + mode);
                 printSpaces(2);
-                version = askForString("Insert version: ");
-                checkVersion(version);
+                if(version.equals("")) version = askForString("Insert version: ");
+                if(!checkVersion(version)){
+                    version = "";
+                    throw new IOException("Invalid version");
+                }
+                System.out.println("Selected version: " + version);
+                printSpaces(2);
+
 
                 tokenizer = getTokenizer(version);
 
@@ -76,9 +92,9 @@ public class App {
     }
 
     private static Tokenizer getTokenizer(String version) {
-        if (version.equals("1.0"))
+        if (version.equals(Version.V1_0.getVersion()))
             return new TokenizerV1_0();
-        if (version.equals("1.1"))
+        if (version.equals(Version.V1_1.getVersion()))
             return new TokenizerV1_1();
         return null;
     }
@@ -99,7 +115,7 @@ public class App {
             throws UnexpectedKeywordException,
                 UnexpectedTokenException {
         Parser<Node> parser;
-        if (version.equals("1.0"))
+        if (version.equals(Version.V1_0.getVersion()))
             parser = new ProgramParserV1_0(TokenIterator.create(aContentProvider.getContent(), tokens));
         else
             parser = new ProgramParserV1_1(TokenIterator.create(aContentProvider.getContent(), tokens));
@@ -137,23 +153,20 @@ public class App {
     }
 
     public static File getFile(String filename) throws IOException {
-        File file = new File(filename);
-        if (!file.exists())
-            throw new IOException("File not found");
-        else
-            return file;
+        return new File(filename);
     }
 
-    public static void checkMode(String mode) throws IOException {
+    private static boolean checkFile(File file) {
+        return file.exists();
+    }
+
+    public static boolean checkMode(String mode) throws IOException {
         List<String> options = Arrays.stream(Mode.values()).map(Mode::getMode).collect(Collectors.toList());
-        if (!options.contains(mode))
-            throw new IOException("Invalid mode");
+        return options.contains(mode);
     }
-
-    // TODO enum brts
-    private static void checkVersion(String version) throws IOException {
-        if (!(version.equals("1.0") || version.equals("1.1")))
-            throw new IOException("Invalid version");
+    private static boolean checkVersion(String version) throws IOException {
+        List<String> versions = Arrays.stream(Version.values()).map(Version::getVersion).collect(Collectors.toList());
+        return versions.contains(version);
     }
 
     @SneakyThrows
