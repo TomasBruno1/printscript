@@ -7,12 +7,12 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InterpreterVisitor implements NodeVisitor {
+public abstract class AbstractInterpreterVisitor implements NodeVisitor {
 
     @Getter
     private final Writer result = new Writer();
 
-    private final SolverVisitor solverVisitor = new SolverVisitor();
+    protected final SolverVisitor solverVisitor = new SolverVisitor();
 
     final Map<String, String> varTypes = new HashMap<>();
 
@@ -62,13 +62,16 @@ public class InterpreterVisitor implements NodeVisitor {
         solverVisitor.assignVariable(name);
     }
 
-    private void checkType(String name, String type) throws TypeMismatchException {
-        if (type.equals("number")) {
-            if (!isNumber(solverVisitor.getResult()))
-                throw new TypeMismatchException(name, type);
-        } else if (type.equals("string")) {
-            if (!isString(solverVisitor.getResult()))
-                throw new TypeMismatchException(name, type);
+    protected void checkType(String name, String type) throws TypeMismatchException {
+        switch (type) {
+            case "number":
+                if (!isNumber(solverVisitor.getResult()))
+                    throw new TypeMismatchException(name, type);
+                break;
+            case "string":
+                if (!isString(solverVisitor.getResult()))
+                    throw new TypeMismatchException(name, type);
+                break;
         }
     }
 

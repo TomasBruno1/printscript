@@ -369,7 +369,7 @@ class ParserTest {
     @Test
     public void declarationParserTestForInitialization() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let a:number;",
                         List.of(
@@ -392,7 +392,7 @@ class ParserTest {
                                     new LexicalRange(5, 0, 6, 0)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     6,
                                     12,
                                     new LexicalRange(6, 0, 12, 0)
@@ -415,7 +415,7 @@ class ParserTest {
             throws UnexpectedTokenException,
                 UnexpectedKeywordException {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let a:number = 8;",
                         List.of(
@@ -438,7 +438,7 @@ class ParserTest {
                                     new LexicalRange(5, 0, 6, 0)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     6,
                                     12,
                                     new LexicalRange(6, 0, 12, 0)
@@ -464,14 +464,14 @@ class ParserTest {
                         )
                     )
             );
-        Declaration declaration = new Declaration("a", "number", new Variable("8"));
+        Declaration declaration = new Declaration("a", "number", false, new Variable("8"));
         assertEquals(declaration.toString(), parser.parse().toString());
     }
 
     @Test
     public void defaultParserTestForSimpleCodeBlockTest() throws UnexpectedTokenException, UnexpectedKeywordException {
         Parser<Node> parser =
-            new DefaultParser(
+            new ProgramParserV1_0(
                     TokenIterator.Companion.create(
                         "let a:number = 8;\nlet b:string = '8';\na = a + b;\nprintln(a);",
                         List.of(
@@ -494,7 +494,7 @@ class ParserTest {
                                     new LexicalRange(5, 0, 6, 0)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     6,
                                     12,
                                     new LexicalRange(6, 0, 12, 0)
@@ -536,7 +536,7 @@ class ParserTest {
                                     new LexicalRange(5, 1, 6, 1)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     24,
                                     30,
                                     new LexicalRange(6, 1, 12, 1)
@@ -630,8 +630,8 @@ class ParserTest {
             );
 
         CodeBlock codeBlock = new CodeBlock();
-        codeBlock.addChild(new Declaration("a", "number", new Variable("8")));
-        codeBlock.addChild(new Declaration("b", "string", new Variable("'8'")));
+        codeBlock.addChild(new Declaration("a", "number", false, new Variable("8")));
+        codeBlock.addChild(new Declaration("b", "string", false, new Variable("'8'")));
         codeBlock.addChild(
             new Assignment(
                     "a",
@@ -645,7 +645,7 @@ class ParserTest {
     @Test
     public void defaultParserTestForNonValidBlockShouldThrowException() {
         Parser<Node> parser =
-            new DefaultParser(
+            new ProgramParserV1_0(
                     TokenIterator.Companion.create(
                         "number",
                         List.of(
@@ -664,7 +664,7 @@ class ParserTest {
     @Test
     public void declarationParserWithMissingIdentifierShouldThrowExceptions() {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let :",
                         List.of(
@@ -689,7 +689,7 @@ class ParserTest {
     @Test
     public void declarationParserWithMissingTypeSeparatorShouldThrowExceptions() {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let x number",
                         List.of(
@@ -720,7 +720,7 @@ class ParserTest {
     @Test
     public void declarationParserWithMissingTypeShouldThrowExceptions() {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let x : ;",
                         List.of(

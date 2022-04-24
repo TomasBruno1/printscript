@@ -3,10 +3,7 @@ package Lexer;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import Commons.DefaultTokenTypes;
-import Commons.Keyword;
-import Commons.Operator;
-import Commons.Separator;
+import Commons.*;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 
@@ -37,6 +34,8 @@ public abstract class AbstractTokenizer implements Tokenizer {
             type = DefaultTokenTypes.SEPARATOR;
         } else if (isKeyword(currentString)) {
             type = DefaultTokenTypes.KEYWORD;
+        } else if (isType(currentString)) {
+            type = DefaultTokenTypes.TYPE;
         } else if (isLiteral(currentString)) {
             type = DefaultTokenTypes.LITERAL;
         } else if (isIdentifier(currentString)) {
@@ -46,6 +45,13 @@ public abstract class AbstractTokenizer implements Tokenizer {
         return type;
     }
 
+    protected boolean isType(String currentString) {
+        return Arrays.stream(Type.V1_0.values())
+            .map(Type::getType)
+            .collect(Collectors.toList())
+            .contains(currentString);
+    }
+
     protected boolean isKeyword(String currentString) {
         return Arrays.stream(Keyword.V1_0.values())
             .map(Keyword::getKeyword)
@@ -53,7 +59,7 @@ public abstract class AbstractTokenizer implements Tokenizer {
             .contains(currentString);
     }
 
-    private boolean isOperator(String currentString) {
+    protected boolean isOperator(String currentString) {
         return (currentString.length() == 1)
             && Arrays.stream(Operator.values())
                 .map(Operator::getOperator)
@@ -61,19 +67,19 @@ public abstract class AbstractTokenizer implements Tokenizer {
                 .contains(currentString.charAt(0));
     }
 
-    private boolean isSeparator(String currentString) {
+    protected boolean isSeparator(String currentString) {
         return (currentString.length() == 1)
-            && Arrays.stream(Separator.values())
-                .map(Separator::getSeparator)
+            && Arrays.stream(Separator.V1_0.values())
+                .map(Separator::getSymbol)
                 .collect(Collectors.toList())
                 .contains(currentString.charAt(0));
     }
 
-    private boolean isLiteral(String currentString) {
-        return (currentString.matches("[0-9]{1,9}(\\.[0-9]*)?|\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'"));
+    protected boolean isLiteral(String currentString) {
+        return (currentString.matches("[0-9]{1,9}(\\.[0-9]*)?|\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'|true|false"));
     }
 
-    private boolean isIdentifier(String currentString) {
+    protected boolean isIdentifier(String currentString) {
         return (currentString.matches("[a-zA-Z_][a-zA-Z0-9_]*"));
     }
 }

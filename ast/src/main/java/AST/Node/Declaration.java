@@ -9,12 +9,18 @@ import lombok.Getter;
 public class Declaration implements Node {
     String varName;
     String type;
-
+    boolean isConstant = false;
     Function value;
 
     public Declaration(String varName, String type) {
         this.varName = varName;
         this.type = type;
+    }
+
+    public Declaration(String varName, String type, boolean isConstant) {
+        this.varName = varName;
+        this.type = type;
+        this.isConstant = isConstant;
     }
 
     @Override

@@ -13,7 +13,8 @@ import Lexer.TokenizerV1_0;
 import Lexer.TokenizerV1_1;
 import Lexer.UnknownTokenException;
 import Lexer.UnclosedStringLiteralException;
-import Parser.DefaultParser;
+import Parser.ProgramParserV1_0;
+import Parser.ProgramParserV1_1;
 import Parser.Parser;
 import Parser.UnexpectedKeywordException;
 import Parser.UnexpectedTokenException;
@@ -30,9 +31,10 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class App {
+    private static String version = "";
+
     public static void main(String[] args) {
         String mode = "";
-        String version = "";
         Tokenizer tokenizer = null;
         File file = null;
         boolean isValid = false;
@@ -96,7 +98,11 @@ public class App {
     private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens)
             throws UnexpectedKeywordException,
                 UnexpectedTokenException {
-        Parser<Node> parser = new DefaultParser(TokenIterator.create(aContentProvider.getContent(), tokens));
+        Parser<Node> parser;
+        if (version.equals("1.0"))
+            parser = new ProgramParserV1_0(TokenIterator.create(aContentProvider.getContent(), tokens));
+        else
+            parser = new ProgramParserV1_1(TokenIterator.create(aContentProvider.getContent(), tokens));
         TaskProgressPrinter.printStart(Task.Parsing);
         timer.start();
         Node root = parser.parse();

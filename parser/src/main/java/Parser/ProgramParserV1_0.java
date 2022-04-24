@@ -9,13 +9,13 @@ import org.austral.ingsis.printscript.parser.Content;
 import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
 
-public class DefaultParser extends TokenConsumer implements Parser<Node> {
+public class ProgramParserV1_0 extends TokenConsumer implements Parser<Node> {
 
-    private final DeclarationParser declarationParser = new DeclarationParser(getStream());
+    private final DeclarationParserV1_0 declarationParserV10 = new DeclarationParserV1_0(getStream());
     private final PrintParser printParser = new PrintParser(getStream());
     private final AssignmentParser assignmentParser = new AssignmentParser(getStream());
 
-    public DefaultParser(@NotNull TokenIterator stream) {
+    public ProgramParserV1_0(@NotNull TokenIterator stream) {
         super(stream);
     }
 
@@ -29,7 +29,7 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
             next = peek(DefaultTokenTypes.KEYWORD);
             if (next != null) {
                 if (next.getContent().equals("let")) {
-                    program.addChild(declarationParser.parse());
+                    program.addChild(declarationParserV10.parse());
                 } else if (next.getContent().equals("println")) {
                     program.addChild(printParser.parse());
                 } else
@@ -41,7 +41,12 @@ public class DefaultParser extends TokenConsumer implements Parser<Node> {
             } else {
                 program.addChild(assignmentParser.parse());
             }
-            if(peek(DefaultTokenTypes.SEPARATOR, ";") == null) throw new UnexpectedTokenException(";", current().getRange().getStartCol(), current().getRange().getStartLine());
+            if (peek(DefaultTokenTypes.SEPARATOR, ";") == null)
+                throw new UnexpectedTokenException(
+                        ";",
+                        current().getRange().getStartCol(),
+                        current().getRange().getStartLine()
+                );
             consume(DefaultTokenTypes.SEPARATOR, ";");
         }
 
