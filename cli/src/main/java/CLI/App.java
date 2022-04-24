@@ -18,6 +18,7 @@ import Parser.ProgramParserV1_1;
 import Parser.Parser;
 import Parser.UnexpectedKeywordException;
 import Parser.UnexpectedTokenException;
+import Parser.UnclosedCodeBlockException;
 import com.github.lalyos.jfiglet.FigletFont;
 import lombok.SneakyThrows;
 import org.austral.ingsis.printscript.common.Token;
@@ -42,31 +43,32 @@ public class App {
         while (!isValid) {
             try {
                 String filename;
-                if(file == null){
+                if (file == null) {
                     filename = askForString("Insert file name: ");
                     file = getFile(filename);
                 }
-                if(!checkFile(file)){
+                if (!checkFile(file)) {
                     file = null;
                     throw new IOException("File not found");
                 }
                 System.out.println("File found: " + file.getAbsolutePath());
                 printSpaces(2);
-                if(mode.equals("")) mode = askForString("Insert execution mode (interpretation or validation): ");
-                if (!checkMode(mode)){
+                if (mode.equals(""))
+                    mode = askForString("Insert execution mode (interpretation or validation): ");
+                if (!checkMode(mode)) {
                     mode = "";
                     throw new IOException("Invalid mode");
                 }
                 System.out.println("Selected mode: " + mode);
                 printSpaces(2);
-                if(version.equals("")) version = askForString("Insert version: ");
-                if(!checkVersion(version)){
+                if (version.equals(""))
+                    version = askForString("Insert version: ");
+                if (!checkVersion(version)) {
                     version = "";
                     throw new IOException("Invalid version");
                 }
                 System.out.println("Selected version: " + version);
                 printSpaces(2);
-
 
                 tokenizer = getTokenizer(version);
 
@@ -113,7 +115,8 @@ public class App {
 
     private static Node executeParserTask(Timer timer, ContentProvider aContentProvider, List<Token> tokens)
             throws UnexpectedKeywordException,
-                UnexpectedTokenException {
+                UnexpectedTokenException,
+                UnclosedCodeBlockException {
         Parser<Node> parser;
         if (version.equals(Version.V1_0.getVersion()))
             parser = new ProgramParserV1_0(TokenIterator.create(aContentProvider.getContent(), tokens));
@@ -164,6 +167,7 @@ public class App {
         List<String> options = Arrays.stream(Mode.values()).map(Mode::getMode).collect(Collectors.toList());
         return options.contains(mode);
     }
+
     private static boolean checkVersion(String version) throws IOException {
         List<String> versions = Arrays.stream(Version.values()).map(Version::getVersion).collect(Collectors.toList());
         return versions.contains(version);

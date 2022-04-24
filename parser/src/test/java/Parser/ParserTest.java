@@ -17,7 +17,10 @@ import org.junit.jupiter.api.Test;
 class ParserTest {
 
     @Test
-    public void assignmentParserTestForSingleLiteral() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void assignmentParserTestForSingleLiteral()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Assignment> parser =
             new AssignmentParser(
                     TokenIterator.Companion.create(
@@ -49,7 +52,10 @@ class ParserTest {
     }
 
     @Test
-    public void assignmentParserTestForSingleIdentifier() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void assignmentParserTestForSingleIdentifier()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Assignment> parser =
             new AssignmentParser(
                     TokenIterator.Companion.create(
@@ -83,7 +89,8 @@ class ParserTest {
     @Test
     public void assignmentParserTestForSingleStringLiteral()
             throws UnexpectedTokenException,
-                UnexpectedKeywordException {
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Assignment> parser =
             new AssignmentParser(
                     TokenIterator.Companion.create(
@@ -115,7 +122,10 @@ class ParserTest {
     }
 
     @Test
-    public void expressionParserTestForSimpleSum() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void expressionParserTestForSimpleSum()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
             new FunctionParser(
                     TokenIterator.Companion.create(
@@ -148,7 +158,10 @@ class ParserTest {
     }
 
     @Test
-    public void expressionParserTestForNumberOperation() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void expressionParserTestForNumberOperation()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
             new FunctionParser(
                     TokenIterator.Companion.create(
@@ -231,7 +244,8 @@ class ParserTest {
     @Test
     public void expressionParserTestForNumberAndVariableOperation()
             throws UnexpectedTokenException,
-                UnexpectedKeywordException {
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
             new FunctionParser(
                     TokenIterator.Companion.create(
@@ -264,7 +278,10 @@ class ParserTest {
     }
 
     @Test
-    public void expressionParserTestForMixedOperation() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void expressionParserTestForMixedOperation()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
             new FunctionParser(
                     TokenIterator.Companion.create(
@@ -329,7 +346,10 @@ class ParserTest {
     }
 
     @Test
-    public void printParserTest() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void printParserTest()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Print> parser =
             new PrintParser(
                     TokenIterator.Companion.create(
@@ -367,7 +387,10 @@ class ParserTest {
     }
 
     @Test
-    public void declarationParserTestForInitialization() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void declarationParserTestForInitialization()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Declaration> parser =
             new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
@@ -413,7 +436,8 @@ class ParserTest {
     @Test
     public void declarationParserTestForInitializationAndAssignment()
             throws UnexpectedTokenException,
-                UnexpectedKeywordException {
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Declaration> parser =
             new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
@@ -469,7 +493,10 @@ class ParserTest {
     }
 
     @Test
-    public void defaultParserTestForSimpleCodeBlockTest() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void defaultParserTestForSimpleCodeBlockTest()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Node> parser =
             new ProgramParserV1_0(
                     TokenIterator.Companion.create(

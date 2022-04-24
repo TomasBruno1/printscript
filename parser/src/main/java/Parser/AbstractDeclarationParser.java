@@ -20,7 +20,7 @@ public abstract class AbstractDeclarationParser extends TokenConsumer implements
         String type = consumeTypeKeyword();
 
         if (peek(DefaultTokenTypes.SEPARATOR, ";") != null) {
-            return new Declaration(variable, type);
+            return new Declaration(variable, type, isConst);
         }
 
         consumeAssignmentOperator();
@@ -39,7 +39,7 @@ public abstract class AbstractDeclarationParser extends TokenConsumer implements
                     current().getRange().getStartLine()
             );
         return false;
-    };
+    }
 
     protected void consumeAssignmentOperator() throws UnexpectedTokenException {
         if (peek(DefaultTokenTypes.ASSIGN, "=") == null)
@@ -73,6 +73,6 @@ public abstract class AbstractDeclarationParser extends TokenConsumer implements
 
     protected String consumeIdentifier() {
         return consume(DefaultTokenTypes.IDENTIFIER).getContent();
-    };
+    }
 
 }

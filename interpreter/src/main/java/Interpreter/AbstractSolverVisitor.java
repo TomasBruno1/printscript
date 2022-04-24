@@ -9,17 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor
-public class SolverVisitor implements ExpressionVisitor {
+public abstract class AbstractSolverVisitor implements ExpressionVisitor {
 
     @Getter
-    private String result;
+    protected String result;
 
-    private Map<String, String> variables = new HashMap<>();
+    protected Map<String, String> variables = new HashMap<>();
 
-    private final String stringRegex = "\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'";
-    private final String numberRegex = "-?[0-9]{1,9}(\\.[0-9]*)?";
+    protected final String stringRegex = "\"[\\s\\S][^\"]*\"|'[\\s\\S][^']*'";
+    protected final String numberRegex = "-?[0-9]{1,9}(\\.[0-9]*)?";
 
-    public SolverVisitor(Map<String, String> variables) {
+    public AbstractSolverVisitor(Map<String, String> variables) {
         this.variables = variables;
     }
 
@@ -36,23 +36,35 @@ public class SolverVisitor implements ExpressionVisitor {
 
         String result;
 
+        result = solveOperation(operand, leftResult, rightResult);
+        if (result == null)
+            throw new UndeclaredVariableException("Missing variable declaration");
+
+        this.result = result;
+    }
+
+    protected String solveOperation(Operand operand, String leftResult, String rightResult)
+            throws InvalidOperationException,
+                BooleanOperationException,
+                UndeclaredVariableException {
+        String result;
         if (isStringOperation(leftResult, rightResult)) {
             result = stringOperation(leftResult, rightResult, operand);
         } else if (leftResult.matches(numberRegex) && rightResult.matches(numberRegex)) {
             result = numericOperation(leftResult, rightResult, operand);
         } else {
-            throw new UndeclaredVariableException("Missing variable declaration");
+            result = null;
         }
-        this.result = result;
+        return result;
     }
 
-    private boolean isStringOperation(String leftResult, String rightResult) {
+    protected boolean isStringOperation(String leftResult, String rightResult) {
         return (leftResult.matches(stringRegex) && rightResult.matches(numberRegex))
             || ((leftResult.matches(numberRegex) && rightResult.matches(stringRegex)))
             || (leftResult.matches(stringRegex) && rightResult.matches(stringRegex));
     }
 
-    private String stringOperation(String leftResult, String rightResult, Operand operand)
+    protected String stringOperation(String leftResult, String rightResult, Operand operand)
             throws InvalidOperationException {
         if (operand != Operand.SUM)
             throw new InvalidOperationException(leftResult, rightResult, operand);
@@ -61,7 +73,7 @@ public class SolverVisitor implements ExpressionVisitor {
         return "\"" + left + right + "\"";
     }
 
-    private String numericOperation(String leftResult, String rightResult, Operand operand) {
+    protected String numericOperation(String leftResult, String rightResult, Operand operand) {
         String result = "";
         Double left = Double.parseDouble(leftResult);
         Double right = Double.parseDouble(rightResult);
@@ -83,7 +95,7 @@ public class SolverVisitor implements ExpressionVisitor {
         return result;
     }
 
-    private String format(double value) {
+    protected String format(double value) {
         String result = value + "";
         while (result.charAt(result.length() - 1) == '0')
             result = result.substring(0, result.length() - 1);
@@ -99,16 +111,16 @@ public class SolverVisitor implements ExpressionVisitor {
             throw new UndeclaredVariableException(variable.getValue());
     }
 
-    private String getResult(Function function) throws NodeException {
+    protected String getResult(Function function) throws NodeException {
         function.accept(this);
         return result;
     }
 
-    public void declareVariable(String name) {
+    public void declareVariable(String name, boolean isConstant) {
         variables.put(name, null);
     }
 
-    public void assignVariable(String name) {
+    public void assignVariable(String name) throws ConstantReassignmentException {
         variables.put(name, result);
     }
 }

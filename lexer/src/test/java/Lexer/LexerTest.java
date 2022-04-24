@@ -40,8 +40,8 @@ class LexerTest {
             List.of(
                 new Token(DefaultTokenTypes.KEYWORD, 0, 3, new LexicalRange(0, 0, 3, 0)),
                 new Token(DefaultTokenTypes.KEYWORD, 4, 11, new LexicalRange(4, 0, 11, 0)),
-                new Token(DefaultTokenTypes.KEYWORD, 13, 19, new LexicalRange(0, 1, 6, 1)),
-                new Token(DefaultTokenTypes.KEYWORD, 20, 26, new LexicalRange(7, 1, 13, 1)),
+                new Token(DefaultTokenTypes.TYPE, 13, 19, new LexicalRange(0, 1, 6, 1)),
+                new Token(DefaultTokenTypes.TYPE, 20, 26, new LexicalRange(7, 1, 13, 1)),
                 new Token(DefaultTokenTypes.KEYWORD, 27, 34, new LexicalRange(0, 2, 7, 2))
             );
 
@@ -147,7 +147,7 @@ class LexerTest {
                         new LexicalRange(12, 0, 13, 0)
                 ),
                 new Token(
-                        DefaultTokenTypes.KEYWORD,
+                        DefaultTokenTypes.TYPE,
                         14,
                         20,
                         new LexicalRange(14, 0, 20, 0)
@@ -178,7 +178,7 @@ class LexerTest {
                         48,
                         new LexicalRange(7, 1, 8, 1)
                 ),
-                new Token(DefaultTokenTypes.KEYWORD, 48, 54, new LexicalRange(8, 1, 14, 1)),
+                new Token(DefaultTokenTypes.TYPE, 48, 54, new LexicalRange(8, 1, 14, 1)),
                 new Token(DefaultTokenTypes.ASSIGN, 54, 55, new LexicalRange(14, 1, 15, 1)),
                 new Token(
                         DefaultTokenTypes.LITERAL,

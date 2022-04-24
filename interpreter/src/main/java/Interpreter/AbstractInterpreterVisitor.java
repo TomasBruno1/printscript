@@ -12,7 +12,7 @@ public abstract class AbstractInterpreterVisitor implements NodeVisitor {
     @Getter
     private final Writer result = new Writer();
 
-    protected final SolverVisitor solverVisitor = new SolverVisitor();
+    protected AbstractSolverVisitor solverVisitor = new SolverVisitorV1_0();
 
     final Map<String, String> varTypes = new HashMap<>();
 
@@ -28,7 +28,7 @@ public abstract class AbstractInterpreterVisitor implements NodeVisitor {
         String type = declaration.getType();
         String name = declaration.getVarName();
         Function function = declaration.getValue();
-        solverVisitor.declareVariable(name);
+        solverVisitor.declareVariable(name, declaration.isConstant());
         if (function != null) {
             function.accept(solverVisitor);
             checkType(name, type);
@@ -80,5 +80,9 @@ public abstract class AbstractInterpreterVisitor implements NodeVisitor {
         print.getContent().accept(solverVisitor);
         String result = solverVisitor.getResult().replaceAll("[\"']", "");
         this.result.write(result);
+    }
+
+    @Override
+    public void visit(IfBlock ifBlock) {
     }
 }
