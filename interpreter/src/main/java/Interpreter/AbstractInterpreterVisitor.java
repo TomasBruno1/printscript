@@ -83,6 +83,6 @@ public abstract class AbstractInterpreterVisitor implements NodeVisitor {
     }
 
     @Override
-    public void visit(IfBlock ifBlock) {
+    public void visit(IfBlock ifBlock) throws NodeException {
     }
 }

@@ -1,5 +1,8 @@
 package Interpreter;
 
+import AST.Node.IfBlock;
+import AST.Node.NodeException;
+
 public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
 
     public InterpreterVisitorV1_1() {
@@ -18,5 +21,16 @@ public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
 
     private boolean isBoolean(String result) {
         return result.equals("true") || result.equals("false");
+    }
+
+    @Override
+    public void visit(IfBlock ifBlock) throws NodeException {
+        ifBlock.getCondition().accept(solverVisitor);
+        String result = solverVisitor.getResult();
+        if (result.equals("true")) {
+            ifBlock.getIfCodeBlock().accept(this);
+        } else if (result.equals("false") && ifBlock.getElseCodeBlock() != null) {
+            ifBlock.getElseCodeBlock().accept(this);
+        }
     }
 }
