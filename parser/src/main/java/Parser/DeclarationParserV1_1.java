@@ -10,6 +10,7 @@ public class DeclarationParserV1_1 extends AbstractDeclarationParser {
 
     public DeclarationParserV1_1(@NotNull TokenIterator stream) {
         super(stream);
+        functionParser = new FunctionParserV1_1(stream);
     }
 
     // Declaration -> Commons.Keyword Identifier Commons.Separator Commons.Keyword Commons.Separator | Commons.Keyword

@@ -8,14 +8,14 @@ import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
 
 public class PrintParser extends TokenConsumer implements Parser<Print> {
-    private final FunctionParser expressionParser = new FunctionParser(getStream());
+    private final AbstractFunctionParser expressionParser = new FunctionParserV1_0(getStream());
 
     public PrintParser(@NotNull TokenIterator stream) {
         super(stream);
     }
 
     @Override
-    public Print parse() throws UnexpectedTokenException {
+    public Print parse() throws UnexpectedTokenException, UnexpectedKeywordException {
         consume(DefaultTokenTypes.KEYWORD, "println");
         if (peek(DefaultTokenTypes.SEPARATOR, "(") == null)
             throw new UnexpectedTokenException(

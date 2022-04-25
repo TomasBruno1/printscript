@@ -2,7 +2,9 @@ package AST.Node;
 
 import AST.Expression.Function;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class IfBlock implements Node {
 

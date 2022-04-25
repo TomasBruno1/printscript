@@ -1,6 +1,7 @@
 package Interpreter;
 
 import AST.Expression.Function;
+import AST.Expression.ReadInput;
 import AST.Node.*;
 import lombok.Getter;
 
@@ -84,5 +85,9 @@ public abstract class AbstractInterpreterVisitor implements NodeVisitor {
 
     @Override
     public void visit(IfBlock ifBlock) throws NodeException {
+    }
+
+    @Override
+    public void visit(ReadInput readInput) throws NodeException {
     }
 }

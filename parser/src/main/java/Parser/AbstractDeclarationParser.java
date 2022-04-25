@@ -7,13 +7,13 @@ import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.TokenIterator;
 
 public abstract class AbstractDeclarationParser extends TokenConsumer implements Parser<Declaration> {
-    private final FunctionParser functionParser = new FunctionParser(getStream());
+    protected AbstractFunctionParser functionParser = new FunctionParserV1_0(getStream());
 
     public AbstractDeclarationParser(TokenIterator stream) {
         super(stream);
     }
 
-    public Declaration parse() throws UnexpectedTokenException {
+    public Declaration parse() throws UnexpectedTokenException, UnexpectedKeywordException {
         boolean isConst = consumeDeclarationKeyword();
         String variable = consumeIdentifier();
         consumeTypeSeparator();

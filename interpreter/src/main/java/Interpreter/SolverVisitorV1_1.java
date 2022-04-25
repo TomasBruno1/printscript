@@ -1,6 +1,7 @@
 package Interpreter;
 
 import AST.Expression.Operand;
+import AST.Expression.ReadInput;
 import AST.Expression.Variable;
 import AST.Node.NodeException;
 
@@ -11,12 +12,15 @@ public class SolverVisitorV1_1 extends AbstractSolverVisitor {
 
     private final String boolRegex = "true|false";
     private final Map<String, String> constants = new HashMap<>();
+    private final InputProvider inputProvider;
 
-    public SolverVisitorV1_1() {
+    public SolverVisitorV1_1(InputProvider inputProvider) {
+        this.inputProvider = inputProvider;
     }
 
-    public SolverVisitorV1_1(Map<String, String> variables) {
+    public SolverVisitorV1_1(Map<String, String> variables, InputProvider inputProvider) {
         super(variables);
+        this.inputProvider = inputProvider;
     }
 
     @Override
@@ -66,5 +70,16 @@ public class SolverVisitorV1_1 extends AbstractSolverVisitor {
             throw new ConstantReassignmentException(name);
         }
         super.assignVariable(name);
+    }
+
+    @Override
+    public void visitReadInput(ReadInput readInput) throws NodeException {
+        SolverVisitorV1_1 visitor = new SolverVisitorV1_1(variables, inputProvider);
+        readInput.getPrompt().accept(visitor);
+        String prompt = visitor.getResult();
+        if (prompt.matches(stringRegex))
+            result = "\"" + inputProvider.getInput("> " + prompt.replaceAll("[\"']", "")) + "\"";
+        else
+            throw new IllegalArgumentException("Prompt must be a string");
     }
 }

@@ -123,4 +123,8 @@ public abstract class AbstractSolverVisitor implements ExpressionVisitor {
     public void assignVariable(String name) throws ConstantReassignmentException {
         variables.put(name, result);
     }
+
+    @Override
+    public void visitReadInput(ReadInput readInput) throws NodeException {
+    }
 }

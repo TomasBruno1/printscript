@@ -8,13 +8,13 @@ import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
 
-public class FunctionParser extends TokenConsumer implements Parser<Function> {
-    public FunctionParser(@NotNull TokenIterator stream) {
+public abstract class AbstractFunctionParser extends TokenConsumer implements Parser<Function> {
+    public AbstractFunctionParser(@NotNull TokenIterator stream) {
         super(stream);
     }
 
     @Override
-    public Function parse() throws UnexpectedTokenException {
+    public Function parse() throws UnexpectedTokenException, UnexpectedKeywordException {
         if (peekAny(DefaultTokenTypes.IDENTIFIER, DefaultTokenTypes.LITERAL) == null)
             throw new UnexpectedTokenException(
                     "identifier/literal",

@@ -2,11 +2,12 @@ package Interpreter;
 
 import AST.Node.IfBlock;
 import AST.Node.NodeException;
+import AST.Expression.ReadInput;
 
 public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
 
-    public InterpreterVisitorV1_1() {
-        solverVisitor = new SolverVisitorV1_1();
+    public InterpreterVisitorV1_1(InputProvider inputProvider) {
+        solverVisitor = new SolverVisitorV1_1(inputProvider);
     }
 
     @Override
@@ -32,5 +33,9 @@ public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
         } else if (result.equals("false") && ifBlock.getElseCodeBlock() != null) {
             ifBlock.getElseCodeBlock().accept(this);
         }
+    }
+
+    @Override
+    public void visit(ReadInput readInput) throws NodeException {
     }
 }

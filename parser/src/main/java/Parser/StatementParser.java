@@ -11,9 +11,11 @@ public class StatementParser extends TokenConsumer implements Parser<Node> {
 
     private final DeclarationParserV1_1 declarationParserV1_1 = new DeclarationParserV1_1(getStream());
     private final PrintParser printParser = new PrintParser(getStream());
-    private final AssignmentParser assignmentParser = new AssignmentParser(getStream());
-    private final ReadInputParser readInputParser = new ReadInputParser(getStream());
-    private final IfBlockParser ifParser = new IfBlockParser(getStream());
+    private final AssignmentParser assignmentParser = new AssignmentParser(
+            getStream(),
+            new FunctionParserV1_1(getStream())
+    );
+    private final IfBlockParser ifParser = new IfBlockParser(getStream(), this);
 
     public StatementParser(@NotNull TokenIterator stream) {
         super(stream);
@@ -29,8 +31,6 @@ public class StatementParser extends TokenConsumer implements Parser<Node> {
                 result = declarationParserV1_1.parse();
             } else if (next.getContent().equals("println")) {
                 result = printParser.parse();
-            } else if (next.getContent().equals("readInput")) {
-                result = readInputParser.parse();
             } else if (next.getContent().equals("if")) {
                 result = ifParser.parse();
             } else

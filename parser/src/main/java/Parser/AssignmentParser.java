@@ -10,14 +10,15 @@ import org.jetbrains.annotations.NotNull;
 // Assignment -> Identifier Commons.Operator Expr Commons.Separator
 public class AssignmentParser extends TokenConsumer implements Parser<Assignment> {
 
-    private final FunctionParser expressionParser = new FunctionParser(getStream());
+    private final AbstractFunctionParser expressionParser;
 
-    public AssignmentParser(@NotNull TokenIterator stream) {
+    public AssignmentParser(@NotNull TokenIterator stream, AbstractFunctionParser expressionParser) {
         super(stream);
+        this.expressionParser = expressionParser;
     }
 
     @Override
-    public Assignment parse() throws UnexpectedTokenException {
+    public Assignment parse() throws UnexpectedTokenException, UnexpectedKeywordException {
         if (peek(DefaultTokenTypes.IDENTIFIER) == null)
             throw new UnexpectedTokenException(
                     "identifier",

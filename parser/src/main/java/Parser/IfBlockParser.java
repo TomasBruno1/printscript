@@ -10,11 +10,12 @@ import org.austral.ingsis.printscript.parser.TokenIterator;
 import org.jetbrains.annotations.NotNull;
 
 public class IfBlockParser extends TokenConsumer implements Parser<IfBlock> {
-    private final FunctionParser expressionParser = new FunctionParser(getStream());
-    private final StatementParser statementParser = new StatementParser(getStream());
+    private final AbstractFunctionParser expressionParser = new FunctionParserV1_1(getStream());
+    private final StatementParser statementParser;
 
-    public IfBlockParser(@NotNull TokenIterator stream) {
+    public IfBlockParser(@NotNull TokenIterator stream, StatementParser statementParser) {
         super(stream);
+        this.statementParser = statementParser;
     }
 
     @Override

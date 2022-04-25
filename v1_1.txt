@@ -2,6 +2,7 @@ let aBoolean: boolean = false;
 const x: number = 5;
 if(true) {
     println("entered if");
+    let aNameAndSurname: string = readInput("Enter your name: ") + readInput("Enter your surname: ");
 } else {
     println("entered else");
 };
@@ -30,6 +31,6 @@ if(aBoolean) {
     println(z + 1 + " world!");
     println(2 + 3 * 2 - 4 + 6/3);
     println(aBoolean);
-} else {
-    println("AAAAAAAAA");
 };
+
+println("Goodbye " + aNameAndSurname);

@@ -6,5 +6,5 @@ import AST.Node.NodeException;
 public interface Function extends Node {
     void accept(ExpressionVisitor visitor) throws NodeException;
 
-    Function addVariable(Operand operand, Variable variable);
+    Function addVariable(Operand operand, Function variable);
 }

@@ -13,7 +13,10 @@ public class ProgramParserV1_0 extends TokenConsumer implements Parser<Node> {
 
     private final DeclarationParserV1_0 declarationParserV10 = new DeclarationParserV1_0(getStream());
     private final PrintParser printParser = new PrintParser(getStream());
-    private final AssignmentParser assignmentParser = new AssignmentParser(getStream());
+    private final AssignmentParser assignmentParser = new AssignmentParser(
+            getStream(),
+            new FunctionParserV1_0(getStream())
+    );
 
     public ProgramParserV1_0(@NotNull TokenIterator stream) {
         super(stream);

@@ -134,7 +134,11 @@ public class App {
         Interpreter interpreter = new Interpreter();
         TaskProgressPrinter.printStart(Task.Interpretation);
         timer.start();
-        Writer writer = interpreter.run(root);
+        Writer writer;
+        if (version.equals(Version.V1_0.getVersion()))
+            writer = interpreter.run(root);
+        else
+            writer = interpreter.run(root, new DefaultInputProvider());
         System.out.println(writer.read());
         timer.stop();
         TaskProgressPrinter.printEnd(Task.Interpretation, timer);

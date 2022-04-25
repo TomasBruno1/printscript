@@ -17,7 +17,7 @@ public class Variable implements Function {
     }
 
     @Override
-    public Function addVariable(Operand operand, Variable variable) {
+    public Function addVariable(Operand operand, Function variable) {
         return new Expression(this, operand, variable);
     }
 

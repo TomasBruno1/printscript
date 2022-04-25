@@ -26,7 +26,7 @@ public class Expression implements Function {
         visitor.visitExpression(this);
     }
 
-    public Function addVariable(Operand operand, Variable variable) {
+    public Function addVariable(Operand operand, Function variable) {
         if (operand == Operand.SUB || operand == Operand.SUM) {
             return new Expression(this, operand, variable);
         } else {
