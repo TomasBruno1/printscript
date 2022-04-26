@@ -2,13 +2,16 @@ package Parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import AST.Expression.Expression;
-import AST.Expression.Function;
-import AST.Expression.Operand;
-import AST.Expression.Variable;
+import AST.Expression.*;
 import AST.Node.*;
 import Commons.DefaultTokenTypes;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+
+import lombok.SneakyThrows;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 import org.austral.ingsis.printscript.parser.TokenIterator;
@@ -17,64 +20,71 @@ import org.junit.jupiter.api.Test;
 class ParserTest {
 
     @Test
-    public void assignmentParserTestForSingleLiteral() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void assignmentParserTestForSingleLiteral()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
+        TokenIterator tokenIterator = TokenIterator.Companion.create(
+            "a = 5",
+            List.of(
+                new Token(
+                        DefaultTokenTypes.IDENTIFIER,
+                        0,
+                        1,
+                        new LexicalRange(0, 0, 3, 0)
+                ),
+                new Token(
+                        DefaultTokenTypes.ASSIGN,
+                        2,
+                        3,
+                        new LexicalRange(2, 0, 3, 1)
+                ),
+                new Token(
+                        DefaultTokenTypes.LITERAL,
+                        4,
+                        5,
+                        new LexicalRange(4, 0, 5, 1)
+                )
+            )
+        );
         Parser<Assignment> parser =
-            new AssignmentParser(
-                    TokenIterator.Companion.create(
-                        "a = 5",
-                        List.of(
-                            new Token(
-                                    DefaultTokenTypes.IDENTIFIER,
-                                    0,
-                                    1,
-                                    new LexicalRange(0, 0, 3, 0)
-                            ),
-                            new Token(
-                                    DefaultTokenTypes.ASSIGN,
-                                    2,
-                                    3,
-                                    new LexicalRange(2, 0, 3, 1)
-                            ),
-                            new Token(
-                                    DefaultTokenTypes.LITERAL,
-                                    4,
-                                    5,
-                                    new LexicalRange(4, 0, 5, 1)
-                            )
-                        )
-                    )
-            );
+            new AssignmentParser(tokenIterator, new FunctionParserV1_0(tokenIterator));
         Assignment assignment = new Assignment("a", new Variable("5"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
     @Test
-    public void assignmentParserTestForSingleIdentifier() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void assignmentParserTestForSingleIdentifier()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
+        TokenIterator tokenIterator = TokenIterator.Companion.create(
+            "a = b",
+            List.of(
+                new Token(
+                        DefaultTokenTypes.IDENTIFIER,
+                        0,
+                        1,
+                        new LexicalRange(0, 0, 3, 0)
+                ),
+                new Token(
+                        DefaultTokenTypes.ASSIGN,
+                        2,
+                        3,
+                        new LexicalRange(2, 0, 3, 1)
+                ),
+                new Token(
+                        DefaultTokenTypes.IDENTIFIER,
+                        4,
+                        5,
+                        new LexicalRange(4, 0, 5, 1)
+                )
+            )
+        );
         Parser<Assignment> parser =
             new AssignmentParser(
-                    TokenIterator.Companion.create(
-                        "a = b",
-                        List.of(
-                            new Token(
-                                    DefaultTokenTypes.IDENTIFIER,
-                                    0,
-                                    1,
-                                    new LexicalRange(0, 0, 3, 0)
-                            ),
-                            new Token(
-                                    DefaultTokenTypes.ASSIGN,
-                                    2,
-                                    3,
-                                    new LexicalRange(2, 0, 3, 1)
-                            ),
-                            new Token(
-                                    DefaultTokenTypes.IDENTIFIER,
-                                    4,
-                                    5,
-                                    new LexicalRange(4, 0, 5, 1)
-                            )
-                        )
-                    )
+                    tokenIterator,
+                    new FunctionParserV1_0(tokenIterator)
             );
         Assignment assignment = new Assignment("a", new Variable("b"));
         assertEquals(assignment.toString(), parser.parse().toString());
@@ -83,41 +93,47 @@ class ParserTest {
     @Test
     public void assignmentParserTestForSingleStringLiteral()
             throws UnexpectedTokenException,
-                UnexpectedKeywordException {
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
+        TokenIterator tokenIterator = TokenIterator.Companion.create(
+            "a = 'a'",
+            List.of(
+                new Token(
+                        DefaultTokenTypes.IDENTIFIER,
+                        0,
+                        1,
+                        new LexicalRange(0, 0, 3, 0)
+                ),
+                new Token(
+                        DefaultTokenTypes.ASSIGN,
+                        2,
+                        3,
+                        new LexicalRange(2, 0, 3, 1)
+                ),
+                new Token(
+                        DefaultTokenTypes.LITERAL,
+                        4,
+                        7,
+                        new LexicalRange(4, 0, 7, 1)
+                )
+            )
+        );
         Parser<Assignment> parser =
             new AssignmentParser(
-                    TokenIterator.Companion.create(
-                        "a = 'a'",
-                        List.of(
-                            new Token(
-                                    DefaultTokenTypes.IDENTIFIER,
-                                    0,
-                                    1,
-                                    new LexicalRange(0, 0, 3, 0)
-                            ),
-                            new Token(
-                                    DefaultTokenTypes.ASSIGN,
-                                    2,
-                                    3,
-                                    new LexicalRange(2, 0, 3, 1)
-                            ),
-                            new Token(
-                                    DefaultTokenTypes.LITERAL,
-                                    4,
-                                    7,
-                                    new LexicalRange(4, 0, 7, 1)
-                            )
-                        )
-                    )
+                    tokenIterator,
+                    new FunctionParserV1_0(tokenIterator)
             );
         Assignment assignment = new Assignment("a", new Variable("'a'"));
         assertEquals(assignment.toString(), parser.parse().toString());
     }
 
     @Test
-    public void expressionParserTestForSimpleSum() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void expressionParserTestForSimpleSum()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
-            new FunctionParser(
+            new FunctionParserV1_0(
                     TokenIterator.Companion.create(
                         "2 + 3",
                         List.of(
@@ -148,9 +164,12 @@ class ParserTest {
     }
 
     @Test
-    public void expressionParserTestForNumberOperation() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void expressionParserTestForNumberOperation()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
-            new FunctionParser(
+            new FunctionParserV1_0(
                     TokenIterator.Companion.create(
                         "2 + 3 * 4 - 10 / 5",
                         List.of(
@@ -231,9 +250,10 @@ class ParserTest {
     @Test
     public void expressionParserTestForNumberAndVariableOperation()
             throws UnexpectedTokenException,
-                UnexpectedKeywordException {
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
-            new FunctionParser(
+            new FunctionParserV1_0(
                     TokenIterator.Companion.create(
                         "2 + a",
                         List.of(
@@ -264,9 +284,12 @@ class ParserTest {
     }
 
     @Test
-    public void expressionParserTestForMixedOperation() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void expressionParserTestForMixedOperation()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Function> parser =
-            new FunctionParser(
+            new FunctionParserV1_0(
                     TokenIterator.Companion.create(
                         "2 + a * 'hola' - 8",
                         List.of(
@@ -329,7 +352,10 @@ class ParserTest {
     }
 
     @Test
-    public void printParserTest() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void printParserTest()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Print> parser =
             new PrintParser(
                     TokenIterator.Companion.create(
@@ -367,9 +393,12 @@ class ParserTest {
     }
 
     @Test
-    public void declarationParserTestForInitialization() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void declarationParserTestForInitialization()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let a:number;",
                         List.of(
@@ -392,7 +421,7 @@ class ParserTest {
                                     new LexicalRange(5, 0, 6, 0)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     6,
                                     12,
                                     new LexicalRange(6, 0, 12, 0)
@@ -413,9 +442,10 @@ class ParserTest {
     @Test
     public void declarationParserTestForInitializationAndAssignment()
             throws UnexpectedTokenException,
-                UnexpectedKeywordException {
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let a:number = 8;",
                         List.of(
@@ -438,7 +468,7 @@ class ParserTest {
                                     new LexicalRange(5, 0, 6, 0)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     6,
                                     12,
                                     new LexicalRange(6, 0, 12, 0)
@@ -464,14 +494,17 @@ class ParserTest {
                         )
                     )
             );
-        Declaration declaration = new Declaration("a", "number", new Variable("8"));
+        Declaration declaration = new Declaration("a", "number", false, new Variable("8"));
         assertEquals(declaration.toString(), parser.parse().toString());
     }
 
     @Test
-    public void defaultParserTestForSimpleCodeBlockTest() throws UnexpectedTokenException, UnexpectedKeywordException {
+    public void defaultParserTestForSimpleCodeBlockTest()
+            throws UnexpectedTokenException,
+                UnexpectedKeywordException,
+                UnclosedCodeBlockException {
         Parser<Node> parser =
-            new DefaultParser(
+            new ProgramParserV1_0(
                     TokenIterator.Companion.create(
                         "let a:number = 8;\nlet b:string = '8';\na = a + b;\nprintln(a);",
                         List.of(
@@ -494,7 +527,7 @@ class ParserTest {
                                     new LexicalRange(5, 0, 6, 0)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     6,
                                     12,
                                     new LexicalRange(6, 0, 12, 0)
@@ -536,7 +569,7 @@ class ParserTest {
                                     new LexicalRange(5, 1, 6, 1)
                             ),
                             new Token(
-                                    DefaultTokenTypes.KEYWORD,
+                                    DefaultTokenTypes.TYPE,
                                     24,
                                     30,
                                     new LexicalRange(6, 1, 12, 1)
@@ -630,8 +663,8 @@ class ParserTest {
             );
 
         CodeBlock codeBlock = new CodeBlock();
-        codeBlock.addChild(new Declaration("a", "number", new Variable("8")));
-        codeBlock.addChild(new Declaration("b", "string", new Variable("'8'")));
+        codeBlock.addChild(new Declaration("a", "number", false, new Variable("8")));
+        codeBlock.addChild(new Declaration("b", "string", false, new Variable("'8'")));
         codeBlock.addChild(
             new Assignment(
                     "a",
@@ -645,7 +678,7 @@ class ParserTest {
     @Test
     public void defaultParserTestForNonValidBlockShouldThrowException() {
         Parser<Node> parser =
-            new DefaultParser(
+            new ProgramParserV1_0(
                     TokenIterator.Companion.create(
                         "number",
                         List.of(
@@ -664,7 +697,7 @@ class ParserTest {
     @Test
     public void declarationParserWithMissingIdentifierShouldThrowExceptions() {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let :",
                         List.of(
@@ -689,7 +722,7 @@ class ParserTest {
     @Test
     public void declarationParserWithMissingTypeSeparatorShouldThrowExceptions() {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let x number",
                         List.of(
@@ -720,7 +753,7 @@ class ParserTest {
     @Test
     public void declarationParserWithMissingTypeShouldThrowExceptions() {
         Parser<Declaration> parser =
-            new DeclarationParser(
+            new DeclarationParserV1_0(
                     TokenIterator.Companion.create(
                         "let x : ;",
                         List.of(
@@ -814,6 +847,71 @@ class ParserTest {
                     )
             );
         assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
+    @SneakyThrows
+    @Test
+    public void parserTestV1_1() {
+        List<Token> tokens = getFromFile();
+        Parser<Node> parser = new ProgramParserV1_1(
+                TokenIterator.Companion.create(
+                    "if(false){let variable: string = 'Hello World!';}else{ \nconst aBoolean:boolean=true;};if(aBoolean){let variable: string = readInput('hola' + readInput(' mundo') + '!');};",
+                    tokens
+                )
+        );
+
+        CodeBlock codeBlock = new CodeBlock();
+        CodeBlock ifBlock = new CodeBlock();
+        CodeBlock elseBlock = new CodeBlock();
+        ifBlock.addChild(new Declaration("variable", "string", false, new Variable("'Hello World!'")));
+        elseBlock.addChild(new Declaration("aBoolean", "boolean", true, new Variable("true")));
+        CodeBlock ifBlock2 = new CodeBlock();
+        ifBlock2.addChild(
+            new Declaration(
+                    "variable",
+                    "string",
+                    false,
+                    new ReadInput(
+                            new Expression(
+                                    new Expression(
+                                            new Variable("'hola'"),
+                                            Operand.SUM,
+                                            new ReadInput(new Variable("' mundo'"))
+                                    ),
+                                    Operand.SUM,
+                                    new Variable("'!'")
+                            )
+                    )
+            )
+        );
+        codeBlock.addChild(new IfBlock(new Variable("false"), ifBlock, elseBlock));
+        codeBlock.addChild(new IfBlock(new Variable("aBoolean"), ifBlock2, new CodeBlock()));
+
+        assertEquals(codeBlock.toString(), parser.parse().toString());
+    }
+
+    @SneakyThrows
+    private List<Token> getFromFile() {
+        List<Token> tokens = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader("../lexerOutput.txt"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+            tokens.add(
+                new Token(
+                        DefaultTokenTypes.valueOf(values[0]),
+                        Integer.parseInt(values[1]),
+                        Integer.parseInt(values[2]),
+                        new LexicalRange(
+                                Integer.parseInt(values[3]),
+                                Integer.parseInt(values[4]),
+                                Integer.parseInt(values[5]),
+                                Integer.parseInt(values[6])
+                        )
+                )
+            );
+        }
+        return tokens;
     }
 
 }

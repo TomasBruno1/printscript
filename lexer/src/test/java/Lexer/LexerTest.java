@@ -4,14 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import Commons.DefaultTokenTypes;
 import ContentProvider.StringContentProvider;
+
+import java.io.FileWriter;
 import java.util.List;
+
+import lombok.SneakyThrows;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 import org.junit.jupiter.api.Test;
 
 class LexerTest {
 
-    Lexer lexer = new DefaultLexer();
+    Lexer lexer = new DefaultLexer(new TokenizerV1_0());
 
     // + - * / ( ) =
     @Test
@@ -40,8 +44,8 @@ class LexerTest {
             List.of(
                 new Token(DefaultTokenTypes.KEYWORD, 0, 3, new LexicalRange(0, 0, 3, 0)),
                 new Token(DefaultTokenTypes.KEYWORD, 4, 11, new LexicalRange(4, 0, 11, 0)),
-                new Token(DefaultTokenTypes.KEYWORD, 13, 19, new LexicalRange(0, 1, 6, 1)),
-                new Token(DefaultTokenTypes.KEYWORD, 20, 26, new LexicalRange(7, 1, 13, 1)),
+                new Token(DefaultTokenTypes.TYPE, 13, 19, new LexicalRange(0, 1, 6, 1)),
+                new Token(DefaultTokenTypes.TYPE, 20, 26, new LexicalRange(7, 1, 13, 1)),
                 new Token(DefaultTokenTypes.KEYWORD, 27, 34, new LexicalRange(0, 2, 7, 2))
             );
 
@@ -147,7 +151,7 @@ class LexerTest {
                         new LexicalRange(12, 0, 13, 0)
                 ),
                 new Token(
-                        DefaultTokenTypes.KEYWORD,
+                        DefaultTokenTypes.TYPE,
                         14,
                         20,
                         new LexicalRange(14, 0, 20, 0)
@@ -178,7 +182,7 @@ class LexerTest {
                         48,
                         new LexicalRange(7, 1, 8, 1)
                 ),
-                new Token(DefaultTokenTypes.KEYWORD, 48, 54, new LexicalRange(8, 1, 14, 1)),
+                new Token(DefaultTokenTypes.TYPE, 48, 54, new LexicalRange(8, 1, 14, 1)),
                 new Token(DefaultTokenTypes.ASSIGN, 54, 55, new LexicalRange(14, 1, 15, 1)),
                 new Token(
                         DefaultTokenTypes.LITERAL,
@@ -217,6 +221,30 @@ class LexerTest {
 
         assertEquals(tokens.size(), result.size());
         assertTrue(result.containsAll(tokens));
+    }
+
+    @SneakyThrows
+    private void writeResult(List<Token> tokens) {
+        FileWriter writer = new FileWriter("../lexerOutput.txt");
+        for (Token token : tokens) {
+            writer.write(
+                token.getType()
+                    + ","
+                    + token.getFrom()
+                    + ","
+                    + token.getTo()
+                    + ","
+                    + token.getRange().getStartCol()
+                    + ","
+                    + token.getRange().getStartLine()
+                    + ","
+                    + token.getRange().getEndCol()
+                    + ","
+                    + token.getRange().getEndLine()
+                    + System.lineSeparator()
+            );
+        }
+        writer.close();
     }
 
     @Test
@@ -264,6 +292,19 @@ class LexerTest {
 
         assertEquals(tokens.size(), result.size());
         assertTrue(result.containsAll(tokens));
+    }
+
+    @Test
+    public void integrationLexerTest3() throws UnknownTokenException, UnclosedStringLiteralException {
+        Lexer lexer = new DefaultLexer(new TokenizerV1_1());
+        List<Token> result =
+            lexer.lex(
+                new StringContentProvider(
+                        "if(false){let variable: string = 'Hello World!';}else{ \nconst aBoolean:boolean=true;};if(aBoolean){let variable: string = readInput('hola' + readInput(' mundo') + '!');};"
+                )
+            );
+
+        writeResult(result);
     }
 
     @Test

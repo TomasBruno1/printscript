@@ -9,7 +9,8 @@ public enum DefaultTokenTypes implements TokenType {
     OPERATOR("OPERATOR"),
     LITERAL("LITERAL"),
     SEPARATOR("SEPARATOR"),
-    ASSIGN("ASSIGN");
+    ASSIGN("ASSIGN"),
+    TYPE("TYPE");
 
     private String type;
 

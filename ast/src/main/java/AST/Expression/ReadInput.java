@@ -6,14 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public class Variable implements Function {
+public class ReadInput implements Function {
 
     @Getter
-    private String value;
+    Function prompt;
+
+    @Override
+    public void accept(NodeVisitor visitor) throws NodeException {
+    }
 
     @Override
     public void accept(ExpressionVisitor visitor) throws NodeException {
-        visitor.visitVariable(this);
+        visitor.visitReadInput(this);
     }
 
     @Override
@@ -22,11 +26,7 @@ public class Variable implements Function {
     }
 
     @Override
-    public void accept(NodeVisitor visitor) {
-    }
-
-    // toString
     public String toString() {
-        return value;
+        return "ReadInput(" + prompt.toString() + ")";
     }
 }

@@ -1,18 +1,19 @@
 package Interpreter;
 
 import AST.Expression.Function;
+import AST.Expression.ReadInput;
 import AST.Node.*;
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InterpreterVisitor implements NodeVisitor {
+public abstract class AbstractInterpreterVisitor implements NodeVisitor {
 
     @Getter
     private final Writer result = new Writer();
 
-    private final SolverVisitor solverVisitor = new SolverVisitor();
+    protected AbstractSolverVisitor solverVisitor = new SolverVisitorV1_0();
 
     final Map<String, String> varTypes = new HashMap<>();
 
@@ -28,7 +29,7 @@ public class InterpreterVisitor implements NodeVisitor {
         String type = declaration.getType();
         String name = declaration.getVarName();
         Function function = declaration.getValue();
-        solverVisitor.declareVariable(name);
+        solverVisitor.declareVariable(name, declaration.isConstant());
         if (function != null) {
             function.accept(solverVisitor);
             checkType(name, type);
@@ -62,13 +63,16 @@ public class InterpreterVisitor implements NodeVisitor {
         solverVisitor.assignVariable(name);
     }
 
-    private void checkType(String name, String type) throws TypeMismatchException {
-        if (type.equals("number")) {
-            if (!isNumber(solverVisitor.getResult()))
-                throw new TypeMismatchException(name, type);
-        } else if (type.equals("string")) {
-            if (!isString(solverVisitor.getResult()))
-                throw new TypeMismatchException(name, type);
+    protected void checkType(String name, String type) throws TypeMismatchException {
+        switch (type) {
+            case "number":
+                if (!isNumber(solverVisitor.getResult()))
+                    throw new TypeMismatchException(name, type);
+                break;
+            case "string":
+                if (!isString(solverVisitor.getResult()))
+                    throw new TypeMismatchException(name, type);
+                break;
         }
     }
 
@@ -77,5 +81,13 @@ public class InterpreterVisitor implements NodeVisitor {
         print.getContent().accept(solverVisitor);
         String result = solverVisitor.getResult().replaceAll("[\"']", "");
         this.result.write(result);
+    }
+
+    @Override
+    public void visit(IfBlock ifBlock) throws NodeException {
+    }
+
+    @Override
+    public void visit(ReadInput readInput) throws NodeException {
     }
 }

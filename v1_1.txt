@@ -1,0 +1,36 @@
+let aBoolean: boolean = false;
+const x: number = 5;
+if(true) {
+    println("entered if");
+    let aNameAndSurname: string = readInput("Enter your name: ") + readInput("Enter your surname: ");
+} else {
+    println("entered else");
+};
+
+if(aBoolean) {
+    println(x);
+    println(aBoolean);
+    println(false);
+} else {
+    aBoolean = true;
+};
+
+
+let
+    y
+        :
+            number
+                    ;
+y = 2 * x;
+println(y);
+println(x+y+100);
+println(x + y / 2 + "hello");
+
+if(aBoolean) {
+    const z: string = "hello ";
+    println(z + 1 + " world!");
+    println(2 + 3 * 2 - 4 + 6/3);
+    println(aBoolean);
+};
+
+println("Goodbye " + aNameAndSurname);

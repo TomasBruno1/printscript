@@ -3,11 +3,14 @@ package Lexer;
 import ContentProvider.ContentProvider;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.AllArgsConstructor;
 import org.austral.ingsis.printscript.common.Token;
 
+@AllArgsConstructor
 public class DefaultLexer implements Lexer {
 
-    private final Tokenizer tokenizer = new DefaultTokenizer();
+    private final Tokenizer tokenizer;
 
     @Override
     public List<Token> lex(ContentProvider provider) throws UnknownTokenException, UnclosedStringLiteralException {
@@ -69,7 +72,7 @@ public class DefaultLexer implements Lexer {
         return tokens;
     }
 
-    private int getNextQuoteMark(String input, char currentChar, int i) throws UnclosedStringLiteralException {
+    private int getNextQuoteMark(String input, char currentChar, int i) {
         return currentChar == '"'
             ? (input.substring(i + 1)).indexOf('"')
             : (input.substring(i + 1)).indexOf('\'');

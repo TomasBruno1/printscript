@@ -1,22 +1,23 @@
 package Parser;
 
 import AST.Expression.Function;
-import AST.Node.Print;
+import AST.Expression.ReadInput;
 import Commons.DefaultTokenTypes;
 import org.austral.ingsis.printscript.common.TokenConsumer;
 import org.austral.ingsis.printscript.parser.TokenIterator;
-import org.jetbrains.annotations.NotNull;
 
-public class PrintParser extends TokenConsumer implements Parser<Print> {
-    private final AbstractFunctionParser expressionParser = new FunctionParserV1_0(getStream());
+public class ReadInputParser extends TokenConsumer implements Parser<ReadInput> {
 
-    public PrintParser(@NotNull TokenIterator stream) {
+    AbstractFunctionParser expressionParser;
+
+    public ReadInputParser(TokenIterator stream, AbstractFunctionParser expressionParser) {
         super(stream);
+        this.expressionParser = expressionParser;
     }
 
     @Override
-    public Print parse() throws UnexpectedTokenException, UnexpectedKeywordException {
-        consume(DefaultTokenTypes.KEYWORD, "println");
+    public ReadInput parse() throws UnexpectedKeywordException, UnexpectedTokenException {
+        consume(DefaultTokenTypes.KEYWORD, "readInput");
         if (peek(DefaultTokenTypes.SEPARATOR, "(") == null)
             throw new UnexpectedTokenException(
                     "(",
@@ -24,7 +25,7 @@ public class PrintParser extends TokenConsumer implements Parser<Print> {
                     current().getRange().getStartLine()
             );
         consume(DefaultTokenTypes.SEPARATOR, "(");
-        Function content = expressionParser.parse();
+        Function message = expressionParser.parse();
         if (peek(DefaultTokenTypes.SEPARATOR, ")") == null)
             throw new UnexpectedTokenException(
                     ")",
@@ -32,6 +33,7 @@ public class PrintParser extends TokenConsumer implements Parser<Print> {
                     current().getRange().getStartLine()
             );
         consume(DefaultTokenTypes.SEPARATOR, ")");
-        return new Print(content);
+
+        return new ReadInput(message);
     }
 }
