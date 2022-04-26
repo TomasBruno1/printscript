@@ -2,13 +2,16 @@ package Parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import AST.Expression.Expression;
-import AST.Expression.Function;
-import AST.Expression.Operand;
-import AST.Expression.Variable;
+import AST.Expression.*;
 import AST.Node.*;
 import Commons.DefaultTokenTypes;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+
+import lombok.SneakyThrows;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 import org.austral.ingsis.printscript.parser.TokenIterator;
@@ -844,6 +847,71 @@ class ParserTest {
                     )
             );
         assertThrows(UnexpectedTokenException.class, parser::parse);
+    }
+
+    @SneakyThrows
+    @Test
+    public void parserTestV1_1() {
+        List<Token> tokens = getFromFile();
+        Parser<Node> parser = new ProgramParserV1_1(
+                TokenIterator.Companion.create(
+                    "if(false){let variable: string = 'Hello World!';}else{ \nconst aBoolean:boolean=true;};if(aBoolean){let variable: string = readInput('hola' + readInput(' mundo') + '!');};",
+                    tokens
+                )
+        );
+
+        CodeBlock codeBlock = new CodeBlock();
+        CodeBlock ifBlock = new CodeBlock();
+        CodeBlock elseBlock = new CodeBlock();
+        ifBlock.addChild(new Declaration("variable", "string", false, new Variable("'Hello World!'")));
+        elseBlock.addChild(new Declaration("aBoolean", "boolean", true, new Variable("true")));
+        CodeBlock ifBlock2 = new CodeBlock();
+        ifBlock2.addChild(
+            new Declaration(
+                    "variable",
+                    "string",
+                    false,
+                    new ReadInput(
+                            new Expression(
+                                    new Expression(
+                                            new Variable("'hola'"),
+                                            Operand.SUM,
+                                            new ReadInput(new Variable("' mundo'"))
+                                    ),
+                                    Operand.SUM,
+                                    new Variable("'!'")
+                            )
+                    )
+            )
+        );
+        codeBlock.addChild(new IfBlock(new Variable("false"), ifBlock, elseBlock));
+        codeBlock.addChild(new IfBlock(new Variable("aBoolean"), ifBlock2, new CodeBlock()));
+
+        assertEquals(codeBlock.toString(), parser.parse().toString());
+    }
+
+    @SneakyThrows
+    private List<Token> getFromFile() {
+        List<Token> tokens = new ArrayList<>();
+        BufferedReader br = new BufferedReader(new FileReader("../lexerOutput.txt"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] values = line.split(",");
+            tokens.add(
+                new Token(
+                        DefaultTokenTypes.valueOf(values[0]),
+                        Integer.parseInt(values[1]),
+                        Integer.parseInt(values[2]),
+                        new LexicalRange(
+                                Integer.parseInt(values[3]),
+                                Integer.parseInt(values[4]),
+                                Integer.parseInt(values[5]),
+                                Integer.parseInt(values[6])
+                        )
+                )
+            );
+        }
+        return tokens;
     }
 
 }

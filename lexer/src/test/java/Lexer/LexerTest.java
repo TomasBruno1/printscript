@@ -4,7 +4,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import Commons.DefaultTokenTypes;
 import ContentProvider.StringContentProvider;
+
+import java.io.FileWriter;
 import java.util.List;
+
+import lombok.SneakyThrows;
 import org.austral.ingsis.printscript.common.LexicalRange;
 import org.austral.ingsis.printscript.common.Token;
 import org.junit.jupiter.api.Test;
@@ -219,6 +223,30 @@ class LexerTest {
         assertTrue(result.containsAll(tokens));
     }
 
+    @SneakyThrows
+    private void writeResult(List<Token> tokens) {
+        FileWriter writer = new FileWriter("../lexerOutput.txt");
+        for (Token token : tokens) {
+            writer.write(
+                token.getType()
+                    + ","
+                    + token.getFrom()
+                    + ","
+                    + token.getTo()
+                    + ","
+                    + token.getRange().getStartCol()
+                    + ","
+                    + token.getRange().getStartLine()
+                    + ","
+                    + token.getRange().getEndCol()
+                    + ","
+                    + token.getRange().getEndLine()
+                    + System.lineSeparator()
+            );
+        }
+        writer.close();
+    }
+
     @Test
     public void integrationLexerTest2() throws UnknownTokenException, UnclosedStringLiteralException {
         List<Token> tokens =
@@ -264,6 +292,19 @@ class LexerTest {
 
         assertEquals(tokens.size(), result.size());
         assertTrue(result.containsAll(tokens));
+    }
+
+    @Test
+    public void integrationLexerTest3() throws UnknownTokenException, UnclosedStringLiteralException {
+        Lexer lexer = new DefaultLexer(new TokenizerV1_1());
+        List<Token> result =
+            lexer.lex(
+                new StringContentProvider(
+                        "if(false){let variable: string = 'Hello World!';}else{ \nconst aBoolean:boolean=true;};if(aBoolean){let variable: string = readInput('hola' + readInput(' mundo') + '!');};"
+                )
+            );
+
+        writeResult(result);
     }
 
     @Test

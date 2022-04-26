@@ -24,4 +24,9 @@ public class ReadInput implements Function {
     public Function addVariable(Operand operand, Function variable) {
         return new Expression(this, operand, variable);
     }
+
+    @Override
+    public String toString() {
+        return "ReadInput(" + prompt.toString() + ")";
+    }
 }

@@ -16,4 +16,21 @@ public class IfBlock implements Node {
     public void accept(NodeVisitor visitor) throws NodeException {
         visitor.visit(this);
     }
+
+    // toString
+    @Override
+    public String toString() {
+        return "ifBlock{"
+            +
+            "condition="
+            + condition.toString()
+            +
+            ", ifCodeBlock="
+            + ifCodeBlock.toString()
+            +
+            ", elseCodeBlock="
+            + elseCodeBlock.toString()
+            +
+            '}';
+    }
 }
