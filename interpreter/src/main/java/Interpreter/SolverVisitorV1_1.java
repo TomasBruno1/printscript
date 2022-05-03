@@ -81,7 +81,7 @@ public class SolverVisitorV1_1 extends AbstractSolverVisitor {
         readInput.getPrompt().accept(visitor);
         String prompt = visitor.getResult();
         if (prompt.matches(stringRegex)) {
-            printEmitter.print(prompt.replaceAll("\"", "") + "\n");
+            printEmitter.print(prompt.replaceAll("\"", ""));
             result = "\"" + inputProvider.getInput(prompt.replaceAll("[\"']", "")) + "\"";
         } else
             throw new IllegalArgumentException("Prompt must be a string");

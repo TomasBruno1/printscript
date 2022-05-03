@@ -36,7 +36,8 @@ public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
             ifBlock.getIfCodeBlock().accept(this);
         } else if (result.equals("false") && ifBlock.getElseCodeBlock() != null) {
             ifBlock.getElseCodeBlock().accept(this);
-        }
+        } else
+            throw new NodeException("If block condition is not boolean");
     }
 
     @Override
