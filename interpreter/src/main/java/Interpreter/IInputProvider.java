@@ -1,5 +1,5 @@
 package Interpreter;
 
-public interface InputProvider {
+public interface IInputProvider {
     String getInput(String prompt);
 }

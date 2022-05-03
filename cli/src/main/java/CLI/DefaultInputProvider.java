@@ -1,10 +1,10 @@
 package CLI;
 
-import Interpreter.InputProvider;
+import Interpreter.IInputProvider;
 
 import java.util.Scanner;
 
-public class DefaultInputProvider implements InputProvider {
+public class DefaultInputProvider implements IInputProvider {
     @Override
     public String getInput(String prompt) {
         System.out.println(prompt);

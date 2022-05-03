@@ -6,7 +6,7 @@ import AST.Expression.ReadInput;
 
 public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
 
-    public InterpreterVisitorV1_1(InputProvider inputProvider) {
+    public InterpreterVisitorV1_1(IInputProvider inputProvider) {
         solverVisitor = new SolverVisitorV1_1(inputProvider);
     }
 

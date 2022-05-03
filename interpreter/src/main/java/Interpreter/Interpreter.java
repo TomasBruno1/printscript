@@ -11,7 +11,7 @@ public class Interpreter {
         return visitor.getResult();
     }
 
-    public Writer run(Node codeBlock, InputProvider inputProvider) throws NodeException {
+    public Writer run(Node codeBlock, IInputProvider inputProvider) throws NodeException {
         AbstractInterpreterVisitor visitor = new InterpreterVisitorV1_1(inputProvider);
         codeBlock.accept(visitor);
         return visitor.getResult();
