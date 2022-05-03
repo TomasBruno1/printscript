@@ -22,7 +22,7 @@ public class CodeBlock implements Node {
     // toString
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         for (Node child : children) {
             sb.append(child.toString());
         }

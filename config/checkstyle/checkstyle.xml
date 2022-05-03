@@ -15,10 +15,16 @@ Checkstyle configuration that checks the Google coding conventions from Google J
 
 <module name = "Checker">
     <module name="TreeWalker">
-        <module name="SuppressWithNearbyCommentFilter">
-            <property name="commentFormat" value="-@cs\[(\w{8,})\] \w[\(\)\-\.\'\`\,\:\;\w ]{10,}"/>
-            <property name="checkFormat" value="$1"/>
-            <property name="influenceFormat" value="3"/>
+        <module name="BooleanExpressionComplexity">
+            <property name="max" value="5"/>
         </module>
+        <module name="NestedForDepth">
+            <property name="max" value="1"/>
+        </module>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="AvoidNoArgumentSuperConstructorCall"/>
+        <module name="SimplifyBooleanExpression"/>
     </module>
 </module>

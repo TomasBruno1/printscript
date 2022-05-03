@@ -30,15 +30,14 @@ public class Expression implements Function {
         if (operand == Operand.SUB || operand == Operand.SUM) {
             return new Expression(this, operand, variable);
         } else {
-            Function right = new Expression(this.right, operand, variable);
-            return new Expression(left, this.operand, right);
+            return new Expression(left, this.operand, new Expression(this.right, operand, variable));
         }
     }
 
     // toString
     @Override
     public String toString() {
-        String sb = "("
+        return "("
             + left.toString()
             + ")"
             +
@@ -47,6 +46,5 @@ public class Expression implements Function {
             "("
             + right
             + ")";
-        return sb;
     }
 }
