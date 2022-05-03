@@ -33,6 +33,9 @@ public class StatementParser extends TokenConsumer implements Parser<Node> {
                 result = printParser.parse();
             } else if (next.getContent().equals("if")) {
                 result = ifParser.parse();
+                if (peek(DefaultTokenTypes.SEPARATOR, ";") != null)
+                    consumeEOL();
+                return result;
             } else
                 throw new UnexpectedKeywordException(
                         next.getContent(),
@@ -42,6 +45,11 @@ public class StatementParser extends TokenConsumer implements Parser<Node> {
         } else {
             result = assignmentParser.parse();
         }
+        consumeEOL();
+        return result;
+    }
+
+    private void consumeEOL() throws UnexpectedTokenException {
         if (peek(DefaultTokenTypes.SEPARATOR, ";") == null)
             throw new UnexpectedTokenException(
                     ";",
@@ -49,6 +57,5 @@ public class StatementParser extends TokenConsumer implements Parser<Node> {
                     current().getRange().getStartLine()
             );
         consume(DefaultTokenTypes.SEPARATOR, ";");
-        return result;
     }
 }

@@ -11,7 +11,7 @@ import java.util.Map;
 public abstract class AbstractInterpreterVisitor implements NodeVisitor {
 
     @Getter
-    private final Writer result = new Writer();
+    protected final Writer result = new Writer();
 
     protected AbstractSolverVisitor solverVisitor = new SolverVisitorV1_0();
 
