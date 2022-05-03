@@ -134,12 +134,11 @@ public class App {
         Interpreter interpreter = new Interpreter();
         TaskProgressPrinter.printStart(Task.Interpretation);
         timer.start();
-        Writer writer;
-        if (version.equals(Version.V1_0.getVersion()))
-            writer = interpreter.run(root);
-        else
-            writer = interpreter.run(root, new DefaultInputProvider());
-        System.out.println(writer.read());
+        if (version.equals(Version.V1_0.getVersion())) {
+            Writer writer = interpreter.run(root);
+            System.out.println(writer.read());
+        } else
+            interpreter.run(root, new DefaultInputProvider(), new DefaultPrintEmitter());
         timer.stop();
         TaskProgressPrinter.printEnd(Task.Interpretation, timer);
     }
@@ -148,7 +147,10 @@ public class App {
         Interpreter interpreter = new Interpreter();
         TaskProgressPrinter.printStart(Task.Validation);
         timer.start();
-        interpreter.run(root);
+        if (version.equals(Version.V1_0.getVersion()))
+            interpreter.run(root);
+        else
+            interpreter.run(root, new DefaultInputProvider(), new ValidationPrintEmitter());
         timer.stop();
         TaskProgressPrinter.printEnd(Task.Validation, timer);
     }

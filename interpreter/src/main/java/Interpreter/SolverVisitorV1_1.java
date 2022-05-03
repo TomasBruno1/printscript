@@ -13,14 +13,17 @@ public class SolverVisitorV1_1 extends AbstractSolverVisitor {
     private final String boolRegex = "true|false";
     private final Map<String, String> constants = new HashMap<>();
     private final IInputProvider inputProvider;
+    private final IPrintEmitter printEmitter;
 
-    public SolverVisitorV1_1(IInputProvider inputProvider) {
+    public SolverVisitorV1_1(IInputProvider inputProvider, IPrintEmitter printEmitter) {
         this.inputProvider = inputProvider;
+        this.printEmitter = printEmitter;
     }
 
-    public SolverVisitorV1_1(Map<String, String> variables, IInputProvider inputProvider) {
+    public SolverVisitorV1_1(Map<String, String> variables, IInputProvider inputProvider, IPrintEmitter printEmitter) {
         super(variables);
         this.inputProvider = inputProvider;
+        this.printEmitter = printEmitter;
     }
 
     @Override
@@ -74,12 +77,13 @@ public class SolverVisitorV1_1 extends AbstractSolverVisitor {
 
     @Override
     public void visitReadInput(ReadInput readInput) throws NodeException {
-        SolverVisitorV1_1 visitor = new SolverVisitorV1_1(variables, inputProvider);
+        SolverVisitorV1_1 visitor = new SolverVisitorV1_1(variables, inputProvider, printEmitter);
         readInput.getPrompt().accept(visitor);
         String prompt = visitor.getResult();
-        if (prompt.matches(stringRegex))
-            result = "\"" + inputProvider.getInput("> " + prompt.replaceAll("[\"']", "")) + "\"";
-        else
+        if (prompt.matches(stringRegex)) {
+            printEmitter.print(prompt.replaceAll("\"", "") + "\n");
+            result = "\"" + inputProvider.getInput(prompt.replaceAll("[\"']", "")) + "\"";
+        } else
             throw new IllegalArgumentException("Prompt must be a string");
     }
 }

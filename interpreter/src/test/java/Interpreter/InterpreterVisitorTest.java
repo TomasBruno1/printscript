@@ -61,7 +61,8 @@ class InterpreterVisitorTest {
     @Test
     public void test005_WhenReceivingFullCodeBlockThenPrintStatementsShouldBeWrittenToResultV1_1()
             throws NodeException {
-        InterpreterVisitorV1_1 visitor = new InterpreterVisitorV1_1(input -> "Hello");
+        InterpreterVisitorV1_1 visitor = new InterpreterVisitorV1_1(input -> "Hello", s -> {
+        });
         CodeBlock program = new CodeBlock();
         program.addChild(new Print(new Variable("45")));
         program.addChild(new Declaration("x", "number", false, new Variable("2")));

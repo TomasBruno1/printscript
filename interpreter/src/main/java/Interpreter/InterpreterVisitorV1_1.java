@@ -3,11 +3,15 @@ package Interpreter;
 import AST.Node.IfBlock;
 import AST.Node.NodeException;
 import AST.Expression.ReadInput;
+import AST.Node.Print;
 
 public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
 
-    public InterpreterVisitorV1_1(IInputProvider inputProvider) {
-        solverVisitor = new SolverVisitorV1_1(inputProvider);
+    private final IPrintEmitter printEmitter;
+
+    public InterpreterVisitorV1_1(IInputProvider inputProvider, IPrintEmitter printEmitter) {
+        solverVisitor = new SolverVisitorV1_1(inputProvider, printEmitter);
+        this.printEmitter = printEmitter;
     }
 
     @Override
@@ -37,5 +41,13 @@ public class InterpreterVisitorV1_1 extends AbstractInterpreterVisitor {
 
     @Override
     public void visit(ReadInput readInput) throws NodeException {
+    }
+
+    @Override
+    public void visit(Print print) throws NodeException {
+        print.getContent().accept(solverVisitor);
+        String result = solverVisitor.getResult().replaceAll("[\"']", "");
+        this.result.write(result);
+        printEmitter.print(result);
     }
 }
