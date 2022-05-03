@@ -12,13 +12,13 @@ public class SolverVisitorV1_1 extends AbstractSolverVisitor {
 
     private final String boolRegex = "true|false";
     private final Map<String, String> constants = new HashMap<>();
-    private final InputProvider inputProvider;
+    private final IInputProvider inputProvider;
 
-    public SolverVisitorV1_1(InputProvider inputProvider) {
+    public SolverVisitorV1_1(IInputProvider inputProvider) {
         this.inputProvider = inputProvider;
     }
 
-    public SolverVisitorV1_1(Map<String, String> variables, InputProvider inputProvider) {
+    public SolverVisitorV1_1(Map<String, String> variables, IInputProvider inputProvider) {
         super(variables);
         this.inputProvider = inputProvider;
     }
